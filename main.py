@@ -7,47 +7,26 @@ import numpy as np
 
 from model import createModel
 from datasetTools import getDataset
-from config import slicesPath
-from config import batchSize
-from config import filesPerGenre
-from config import nbEpoch
-from config import validationRatio, testRatio
-from config import sliceSize
+from config import *
 
-from songToData import createSlicesFromAudio
+from eegToData import generate_slices
 
-import argparse
-parser = argparse.ArgumentParser()
-parser.add_argument("mode", help="Trains or tests the CNN", nargs='+', choices=["train","test","slice"])
-args = parser.parse_args()
-
-print("--------------------------")
-print("| ** Config ** ")
-print("| Validation ratio: {}".format(validationRatio))
-print("| Test ratio: {}".format(testRatio))
-print("| Slices per genre: {}".format(filesPerGenre))
-print("| Slice size: {}".format(sliceSize))
-print("--------------------------")
-
-if "slice" in args.mode:
-	createSlicesFromAudio()
-	sys.exit()
+def eeg_slice(session_id, channel):
+	generate_slices(session_id, channel)
 
 #List genres
-genres = os.listdir(slicesPath)
-genres = [filename for filename in genres if os.path.isdir(slicesPath+filename)]
-nbClasses = len(genres)
+classes = os.listdir(slicesPath)
+classes = [filename for filename in classes if os.path.isdir(slicesPath+filename)]
+nbClasses = len(classes)
 
-#Create model 
-model = createModel(nbClasses, sliceSize)
-
-if "train" in args.mode:
+def eeg_train():
+	model = createModel(nbClasses, sliceSize)
 
 	#Create or load new dataset
-	train_X, train_y, validation_X, validation_y = getDataset(filesPerGenre, genres, sliceSize, validationRatio, testRatio, mode="train")
+	train_X, train_y, validation_X, validation_y = getDataset(filesPerClass, classes, sliceSize, validationRatio, testRatio, mode="train")
 
 	#Define run id for graphs
-	run_id = "MusicGenres - "+str(batchSize)+" "+''.join(random.SystemRandom().choice(string.ascii_uppercase) for _ in range(10))
+	run_id = "EEGClasses - "+str(batchSize)+" "+''.join(random.SystemRandom().choice(string.ascii_uppercase) for _ in range(10))
 
 	#Train the model
 	print("[+] Training the model...")
@@ -56,23 +35,24 @@ if "train" in args.mode:
 
 	#Save trained model
 	print("[+] Saving the weights...")
-	model.save('musicDNN.tflearn')
+	model.save('eegDNN.tflearn')
 	print("[+] Weights saved! ✅💾")
 
-if "test" in args.mode:
+def eeg_test():
+	model = createModel(nbClasses, sliceSize)
 
 	#Create or load new dataset
-	test_X, test_y = getDataset(filesPerGenre, genres, sliceSize, validationRatio, testRatio, mode="test")
+	test_X, test_y = getDataset(filesPerClass, classes, sliceSize, validationRatio, testRatio, mode="test")
 
 	#Load weights
 	print("[+] Loading weights...")
-	model.load('musicDNN.tflearn')
+	model.load('eegDNN.tflearn')
 	print("    Weights loaded! ✅")
 
 	testAccuracy = model.evaluate(test_X, test_y)[0]
 	print("[+] Test accuracy: {} ".format(testAccuracy))
 
 
-
-
-
+#eeg_slice(session_id, channel)
+#eeg_train()
+eeg_test()

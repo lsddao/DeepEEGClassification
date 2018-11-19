@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import os
 from PIL import Image
 from random import shuffle
@@ -15,28 +11,28 @@ from config import datasetPath
 from config import slicesPath
 
 #Creates name of dataset from parameters
-def getDatasetName(nbPerGenre, sliceSize):
-    name = "{}".format(nbPerGenre)
+def getDatasetName(nbPerClass, sliceSize):
+    name = "{}".format(nbPerClass)
     name += "_{}".format(sliceSize)
     return name
 
 #Creates or loads dataset if it exists
 #Mode = "train" or "test"
-def getDataset(nbPerGenre, genres, sliceSize, validationRatio, testRatio, mode):
-    print("[+] Dataset name: {}".format(getDatasetName(nbPerGenre,sliceSize)))
-    if not os.path.isfile(datasetPath+"train_X_"+getDatasetName(nbPerGenre, sliceSize)+".p"):
-        print("[+] Creating dataset with {} slices of size {} per genre... ⌛️".format(nbPerGenre,sliceSize))
-        createDatasetFromSlices(nbPerGenre, genres, sliceSize, validationRatio, testRatio) 
+def getDataset(nbPerClass, classes, sliceSize, validationRatio, testRatio, mode):
+    print("[+] Dataset name: {}".format(getDatasetName(nbPerClass,sliceSize)))
+    if not os.path.isfile(datasetPath+"train_X_"+getDatasetName(nbPerClass, sliceSize)+".p"):
+        print("[+] Creating dataset with {} slices of size {} per genre... ⌛️".format(nbPerClass,sliceSize))
+        createDatasetFromSlices(nbPerClass, classes, sliceSize, validationRatio, testRatio) 
     else:
         print("[+] Using existing dataset")
     
-    return loadDataset(nbPerGenre, genres, sliceSize, mode)
+    return loadDataset(nbPerClass, classes, sliceSize, mode)
         
 #Loads dataset
 #Mode = "train" or "test"
-def loadDataset(nbPerGenre, genres, sliceSize, mode):
+def loadDataset(nbPerClass, classes, sliceSize, mode):
     #Load existing
-    datasetName = getDatasetName(nbPerGenre, sliceSize)
+    datasetName = getDatasetName(nbPerClass, sliceSize)
     if mode == "train":
         print("[+] Loading training and validation datasets... ")
         train_X = pickle.load(open("{}train_X_{}.p".format(datasetPath,datasetName), "rb" ))
@@ -54,18 +50,18 @@ def loadDataset(nbPerGenre, genres, sliceSize, mode):
         return test_X, test_y
 
 #Saves dataset
-def saveDataset(train_X, train_y, validation_X, validation_y, test_X, test_y, nbPerGenre, genres, sliceSize):
+def saveDataset(train_X, train_y, validation_X, validation_y, test_X, test_y, nbPerClass, classes, sliceSize):
      #Create path for dataset if not existing
     if not os.path.exists(os.path.dirname(datasetPath)):
-        try:
-            os.makedirs(os.path.dirname(datasetPath))
-        except OSError as exc: # Guard against race condition
-            if exc.errno != errno.EEXIST:
-                raise
+        #try:
+        os.makedirs(os.path.dirname(datasetPath))
+        #except OSError as exc: # Guard against race condition
+        #    if exc.errno != errno.EEXIST:
+        #        raise
 
     #SaveDataset
     print("[+] Saving dataset... ")
-    datasetName = getDatasetName(nbPerGenre, sliceSize)
+    datasetName = getDatasetName(nbPerClass, sliceSize)
     pickle.dump(train_X, open("{}train_X_{}.p".format(datasetPath,datasetName), "wb" ))
     pickle.dump(train_y, open("{}train_y_{}.p".format(datasetPath,datasetName), "wb" ))
     pickle.dump(validation_X, open("{}validation_X_{}.p".format(datasetPath,datasetName), "wb" ))
@@ -75,21 +71,21 @@ def saveDataset(train_X, train_y, validation_X, validation_y, test_X, test_y, nb
     print("    Dataset saved! ✅💾")
 
 #Creates and save dataset from slices
-def createDatasetFromSlices(nbPerGenre, genres, sliceSize, validationRatio, testRatio):
+def createDatasetFromSlices(nbPerClass, classes, sliceSize, validationRatio, testRatio):
     data = []
-    for genre in genres:
-        print("-> Adding {}...".format(genre))
+    for eeg_class in classes:
+        print("-> Adding {}...".format(eeg_class))
         #Get slices in genre subfolder
-        filenames = os.listdir(slicesPath+genre)
+        filenames = os.listdir(slicesPath+eeg_class)
         filenames = [filename for filename in filenames if filename.endswith('.png')]
-        filenames = filenames[:nbPerGenre]
+        filenames = filenames[:nbPerClass]
         #Randomize file selection for this genre
         shuffle(filenames)
 
         #Add data (X,y)
         for filename in filenames:
-            imgData = getImageData(slicesPath+genre+"/"+filename, sliceSize)
-            label = [1. if genre == g else 0. for g in genres]
+            imgData = getImageData(slicesPath+eeg_class+"/"+filename, sliceSize)
+            label = [1. if eeg_class == g else 0. for g in classes]
             data.append((imgData,label))
 
     #Shuffle data
@@ -113,6 +109,6 @@ def createDatasetFromSlices(nbPerGenre, genres, sliceSize, validationRatio, test
     print("    Dataset created! ✅")
         
     #Save
-    saveDataset(train_X, train_y, validation_X, validation_y, test_X, test_y, nbPerGenre, genres, sliceSize)
+    saveDataset(train_X, train_y, validation_X, validation_y, test_X, test_y, nbPerClass, classes, sliceSize)
 
     return train_X, train_y, validation_X, validation_y, test_X, test_y
