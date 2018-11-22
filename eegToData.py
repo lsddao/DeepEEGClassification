@@ -39,6 +39,7 @@ enjoy_to_class = {
 }
 
 def generate_slices(session_id, channel, max_image_len, window):
+    print("Creating slices for session {}, channel {}, image_size {}, window {}".format(session_id, channel, max_image_len, window))
     sample_rate=max_image_len*2
     dbconn = trackdata.DBConnection()
     doc = dbconn.session_data(session_id, 'eeg')
@@ -69,6 +70,8 @@ def generate_slices(session_id, channel, max_image_len, window):
         elif "event_name" in x:
             if x["event_name"] == "enjoy_changed":
                 enjoy = x["value"]
+    
+    print("Created {} images".format(img_idx))
 
 def generate_slices_all(channel, max_image_len, window):
     dbconn = trackdata.DBConnection()

@@ -19,7 +19,7 @@ classes = os.listdir(slicesPath)
 classes = [filename for filename in classes if os.path.isdir(slicesPath+filename)]
 nbClasses = len(classes)
 
-def eeg_train():
+def eeg_train(load_existing=True):
 	model = createModel(nbClasses, sliceSize)
 
 	#Create or load new dataset
@@ -27,6 +27,14 @@ def eeg_train():
 
 	#Define run id for graphs
 	run_id = "EEGClasses - "+str(batchSize)+" "+''.join(random.SystemRandom().choice(string.ascii_uppercase) for _ in range(10))
+
+	#Load weights
+	if load_existing:
+		print("[+] Loading weights...")
+		model.load('eegDNN.tflearn')
+		print("    Weights loaded! ✅")
+	else:
+		print("[+] Training model from scratch")
 
 	#Train the model
 	print("[+] Training the model...")
@@ -52,6 +60,6 @@ def eeg_test():
 	testAccuracy = model.evaluate(test_X, test_y)[0]
 	print("[+] Test accuracy: {} ".format(testAccuracy))
 
-eeg_slice(channel)
-#eeg_train()
+#eeg_slice(2)
+eeg_train(False)
 #eeg_test()

@@ -21,7 +21,7 @@ def getDatasetName(nbPerClass, sliceSize):
 def getDataset(nbPerClass, classes, sliceSize, validationRatio, testRatio, mode):
     print("[+] Dataset name: {}".format(getDatasetName(nbPerClass,sliceSize)))
     if not os.path.isfile(datasetPath+"train_X_"+getDatasetName(nbPerClass, sliceSize)+".p"):
-        print("[+] Creating dataset with {} slices of size {} per genre... ⌛️".format(nbPerClass,sliceSize))
+        print("[+] Creating dataset with {} slices of size {} per class... ⌛️".format(nbPerClass,sliceSize))
         createDatasetFromSlices(nbPerClass, classes, sliceSize, validationRatio, testRatio) 
     else:
         print("[+] Using existing dataset")
@@ -75,12 +75,12 @@ def createDatasetFromSlices(nbPerClass, classes, sliceSize, validationRatio, tes
     data = []
     for eeg_class in classes:
         print("-> Adding {}...".format(eeg_class))
-        #Get slices in genre subfolder
+        #Get slices in class subfolder
         filenames = os.listdir(slicesPath+eeg_class)
         filenames = [filename for filename in filenames if filename.endswith('.png')]
-        filenames = filenames[:nbPerClass]
-        #Randomize file selection for this genre
+        #Randomize file selection for this class
         shuffle(filenames)
+        filenames = filenames[:nbPerClass]
 
         #Add data (X,y)
         for filename in filenames:
