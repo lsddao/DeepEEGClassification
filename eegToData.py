@@ -8,7 +8,7 @@ import numpy as np
 import collections
 
 def int_val(f):
-    v = int(5*f)
+    v = int(10*f)
     v = min(v, 255)
     v = max(v, 0)
     return v
@@ -31,15 +31,17 @@ def dump_image(arr, subfolder, image_name):
     png.from_array(arr, 'L', info={ "bitdepth" : 8 }).save("{}/{}/{}.png".format(slicesPath, subfolder, image_name))
 
 enjoy_to_class = {
-	-2 : "very_bad",
+    -2 : "bad",
 	-1 : "bad",
 	0 : "ok",
 	1 : "good",
-	2 : "very_good"
+	2 : "good"
 }
 
-def generate_slices(session_id, channel, sample_rate=256, max_image_len=128, window=90):
-    dbconn = trackdata.DBConnection(session_id, 'eeg')
+def generate_slices(session_id, channel, max_image_len, window):
+    sample_rate=max_image_len*2
+    dbconn = trackdata.DBConnection()
+    doc = dbconn.session_data(session_id, 'eeg')
     increment = int(sample_rate*(1-window/100))
 
     samples = collections.deque(maxlen=sample_rate)
@@ -49,7 +51,7 @@ def generate_slices(session_id, channel, sample_rate=256, max_image_len=128, win
     img_idx = 0
     enjoy = 0
     png_arr_idx = 0
-    for x in dbconn.doc:
+    for x in doc:
         if "channel_data" in x:
             U = x["channel_data"][channel]
             if len(samples) == samples.maxlen:
@@ -67,3 +69,8 @@ def generate_slices(session_id, channel, sample_rate=256, max_image_len=128, win
         elif "event_name" in x:
             if x["event_name"] == "enjoy_changed":
                 enjoy = x["value"]
+
+def generate_slices_all(channel, max_image_len, window):
+    dbconn = trackdata.DBConnection()
+    for session_id in dbconn.all_sessions():
+        generate_slices(session_id, channel, max_image_len, window)

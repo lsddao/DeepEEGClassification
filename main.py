@@ -9,10 +9,10 @@ from model import createModel
 from datasetTools import getDataset
 from config import *
 
-from eegToData import generate_slices
+from eegToData import generate_slices_all
 
-def eeg_slice(session_id, channel):
-	generate_slices(session_id, channel)
+def eeg_slice(channel):
+	generate_slices_all(channel, max_image_len=sliceSize, window=fft_window)
 
 #List genres
 classes = os.listdir(slicesPath)
@@ -52,7 +52,6 @@ def eeg_test():
 	testAccuracy = model.evaluate(test_X, test_y)[0]
 	print("[+] Test accuracy: {} ".format(testAccuracy))
 
-
-#eeg_slice(session_id, channel)
+eeg_slice(channel)
 #eeg_train()
-eeg_test()
+#eeg_test()

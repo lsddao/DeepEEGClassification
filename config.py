@@ -4,6 +4,7 @@ slicesPath = "Data/Slices/"
 
 #Slice parameters
 sliceSize = 128
+fft_window = 90
 
 #Dataset parameters
 filesPerClass = 1000
@@ -14,5 +15,4 @@ testRatio = 0.1
 batchSize = 128
 nbEpoch = 20
 
-session_id = "20181117_193958"
 channel = 1
