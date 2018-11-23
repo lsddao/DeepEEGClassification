@@ -1,8 +1,9 @@
 import pymongo
+from config import dbconnection
 
 class DBConnection:
     def __init__(self):
-        client = pymongo.MongoClient("mongodb://localhost:27017/")
+        client = pymongo.MongoClient(dbconnection)
         self.db = client["muse"]
 
     def session_data(self, session_id, collection_suffix):

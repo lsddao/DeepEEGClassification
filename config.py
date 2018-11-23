@@ -16,3 +16,5 @@ batchSize = 24
 nbEpoch = 16
 
 channel = 1
+
+dbconnection = "mongodb://localhost:27017/"
