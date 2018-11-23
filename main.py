@@ -60,6 +60,6 @@ def eeg_test():
 	testAccuracy = model.evaluate(test_X, test_y)[0]
 	print("[+] Test accuracy: {} ".format(testAccuracy))
 
-#eeg_slice(2)
-eeg_train(False)
-#eeg_test()
+#eeg_slice(1)
+#eeg_train(False)
+eeg_test()
