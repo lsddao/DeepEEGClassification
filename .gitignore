@@ -7,3 +7,5 @@ checkpoint
 *.index
 *.meta
 .vscode/settings.json
+.vscode/.ropeproject/objectdb
+.vscode/.ropeproject/config.py
