@@ -11,19 +11,20 @@ from config import *
 
 from eegToData import generate_slices_all
 
-def eeg_slice(channel):
-	generate_slices_all(channel, max_image_len=sliceSize, window=fft_window)
+def getClasses():
+	classes = os.listdir(imagesPath)
+	classes = [filename for filename in classes if os.path.isdir(imagesPath+filename)]
+	return classes
 
-#List genres
-classes = os.listdir(slicesPath)
-classes = [filename for filename in classes if os.path.isdir(slicesPath+filename)]
-nbClasses = len(classes)
+def eeg_slice():
+	generate_slices_all(channel=channel, max_image_len=image_size, window=fft_window)
 
 def eeg_train(load_existing=True):
-	model = createModel(nbClasses, sliceSize)
+	classes = getClasses()
+	model = createModel(len(classes), image_size)
 
 	#Create or load new dataset
-	train_X, train_y, validation_X, validation_y = getDataset(filesPerClass, classes, sliceSize, validationRatio, testRatio, mode="train")
+	train_X, train_y, validation_X, validation_y = getDataset(filesPerClass, classes, image_size, validationRatio, testRatio, mode="train")
 
 	#Define run id for graphs
 	run_id = "EEGClasses - "+str(batchSize)+" "+''.join(random.SystemRandom().choice(string.ascii_uppercase) for _ in range(10))
@@ -47,10 +48,11 @@ def eeg_train(load_existing=True):
 	print("[+] Weights saved! ✅💾")
 
 def eeg_test():
-	model = createModel(nbClasses, sliceSize)
+	classes = getClasses()
+	model = createModel(len(classes), image_size)
 
 	#Create or load new dataset
-	test_X, test_y = getDataset(filesPerClass, classes, sliceSize, validationRatio, testRatio, mode="test")
+	test_X, test_y = getDataset(filesPerClass, classes, image_size, validationRatio, testRatio, mode="test")
 
 	#Load weights
 	print("[+] Loading weights...")
@@ -60,6 +62,6 @@ def eeg_test():
 	testAccuracy = model.evaluate(test_X, test_y)[0]
 	print("[+] Test accuracy: {} ".format(testAccuracy))
 
-eeg_slice(1)
+#eeg_slice()
 #eeg_train(False)
-#eeg_test()
+eeg_test()

@@ -1,13 +1,13 @@
 #Define paths for files
 datasetPath = "Data/Dataset/"
-slicesPath = "Data/Slices/"
+imagesPath = "Data/Slices/"
 
 #Slice parameters
-sliceSize = 128
+image_size = 64
 fft_window = 90
 
 #Dataset parameters
-filesPerClass = 185
+filesPerClass = 370
 validationRatio = 0.3
 testRatio = 0.1
 
@@ -17,4 +17,4 @@ nbEpoch = 16
 
 channel = 1
 
-dbconnection = "mongodb://localhost:27017/"
+dbconnection = "mongodb://192.168.178.30:27017/"

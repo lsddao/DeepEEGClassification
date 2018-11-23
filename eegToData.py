@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from config import slicesPath
+from config import imagesPath
 
 import trackdata
 
@@ -27,8 +27,15 @@ def fft(sig):
     f = np.delete(f, 0)
     return f
 
+def dump_image_impl(arr, subfolder, image_name):
+    png.from_array(arr, 'L', info={ "bitdepth" : 8 }).save("{}/{}/{}.png".format(imagesPath, subfolder, image_name))
+
 def dump_image(arr, subfolder, image_name):
-    png.from_array(arr, 'L', info={ "bitdepth" : 8 }).save("{}/{}/{}.png".format(slicesPath, subfolder, image_name))
+    size = int(arr.shape[0]/2)
+    img = np.rot90(arr[:size,:size])
+    dump_image_impl(img, subfolder, image_name + '_1')
+    img = np.rot90(arr[size:,:size])
+    dump_image_impl(img, subfolder, image_name + '_2')
 
 enjoy_to_class = {
     -2 : "bad",
@@ -40,6 +47,7 @@ enjoy_to_class = {
 
 def generate_slices(session_id, channel, max_image_len, window):
     print("Creating slices for session {}, channel {}, image_size {}, window {}".format(session_id, channel, max_image_len, window))
+    max_image_len *= 2
     sample_rate=max_image_len*2
     dbconn = trackdata.DBConnection()
     doc = dbconn.session_data(session_id, 'eeg')
@@ -71,7 +79,7 @@ def generate_slices(session_id, channel, max_image_len, window):
             if x["event_name"] == "enjoy_changed":
                 enjoy = x["value"]
     
-    print("Created {} images".format(img_idx))
+    print("Created {} images".format(2*img_idx))
 
 def generate_slices_all(channel, max_image_len, window):
     dbconn = trackdata.DBConnection()

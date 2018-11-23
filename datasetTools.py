@@ -8,7 +8,7 @@ import pickle
 
 from imageFilesTools import getImageData
 from config import datasetPath
-from config import slicesPath
+from config import imagesPath
 
 #Creates name of dataset from parameters
 def getDatasetName(nbPerClass, sliceSize):
@@ -76,7 +76,7 @@ def createDatasetFromSlices(nbPerClass, classes, sliceSize, validationRatio, tes
     for eeg_class in classes:
         print("-> Adding {}...".format(eeg_class))
         #Get slices in class subfolder
-        filenames = os.listdir(slicesPath+eeg_class)
+        filenames = os.listdir(imagesPath+eeg_class)
         filenames = [filename for filename in filenames if filename.endswith('.png')]
         #Randomize file selection for this class
         shuffle(filenames)
@@ -84,7 +84,7 @@ def createDatasetFromSlices(nbPerClass, classes, sliceSize, validationRatio, tes
 
         #Add data (X,y)
         for filename in filenames:
-            imgData = getImageData(slicesPath+eeg_class+"/"+filename, sliceSize)
+            imgData = getImageData(imagesPath+eeg_class+"/"+filename, sliceSize)
             label = [1. if eeg_class == g else 0. for g in classes]
             data.append((imgData,label))
 
