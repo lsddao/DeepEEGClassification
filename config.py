@@ -3,16 +3,16 @@ datasetPath = "Data/Dataset/"
 imagesPath = "Data/Slices/"
 
 #Slice parameters
-image_size = 64
+image_size = 28
 fft_window = 90
 
 #Dataset parameters
-filesPerClass = 370
+filesPerClass = 486
 validationRatio = 0.3
 testRatio = 0.1
 
 #Model parameters
-batchSize = 24
+batchSize = 3*12
 nbEpoch = 16
 
 channel = 1
