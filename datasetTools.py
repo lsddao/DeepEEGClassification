@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import os
-from PIL import Image
 from random import shuffle
 import numpy as np
 import pickle

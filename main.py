@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-import random
-import string
 import os
-import sys
-import numpy as np
 
 from model import createModel
 from datasetTools import getDataset
