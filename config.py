@@ -1,20 +1,10 @@
-#Define paths for files
-datasetPath = "Data/Dataset/"
-imagesPath = "Data/Slices/"
+class GenericConfig:
+    def __init__(self):
+        self.datasetPath = "Data/Dataset/"
+        self.validationRatio = 0.3
+        self.testRatio = 0.1
+        self.batchSize = 36
+        self.nbEpoch = 16
+        self.dbconnection = "mongodb://192.168.178.30:27017/"
 
-#Slice parameters
-image_size = 64
-fft_window = 90
-
-#Dataset parameters
-filesPerClass = 486
-validationRatio = 0.3
-testRatio = 0.1
-
-#Model parameters
-batchSize = 3*12
-nbEpoch = 16
-
-channel = 1
-
-dbconnection = "mongodb://192.168.178.30:27017/"
+generic = GenericConfig()

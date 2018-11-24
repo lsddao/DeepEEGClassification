@@ -1,34 +1,51 @@
-# -*- coding: utf-8 -*-
+import pickle
 
-import numpy as np
+class Model:
+	def __init__(self, config):
+		self.config = config
+		self.model = None
+	
+	def createModel(self):
+		raise NotImplementedError
 
-import tflearn
-from tflearn.layers.conv import conv_2d, max_pool_2d
-from tflearn.layers.core import input_data, dropout, fully_connected
-from tflearn.layers.estimator import regression
+	def loadModel(self):
+		self.model.load('eegDNN.tflearn')
 
-def createModel(nbClasses,imageSize):
-	print("[+] Creating model...")
-	convnet = input_data(shape=[None, imageSize, imageSize, 1], name='input')
+	def createDataset(self):
+		raise NotImplementedError
 
-	convnet = conv_2d(convnet, imageSize/2, 2, activation='elu', weights_init="Xavier")
-	convnet = max_pool_2d(convnet, 2)
+	def datasetName(self):
+		raise NotImplementedError
 
-	convnet = conv_2d(convnet, imageSize, 2, activation='elu', weights_init="Xavier")
-	convnet = max_pool_2d(convnet, 2)
+	def loadDataset(self):
+		datasetName = self.datasetName()
+		datasetPath = self.config.datasetPath
+		print("Loading datasets... ")
+		self.train_X = pickle.load(open("{}train_X_{}.p".format(datasetPath,datasetName), "rb" ))
+		self.train_y = pickle.load(open("{}train_y_{}.p".format(datasetPath,datasetName), "rb" ))
+		self.validation_X = pickle.load(open("{}validation_X_{}.p".format(datasetPath,datasetName), "rb" ))
+		self.validation_y = pickle.load(open("{}validation_y_{}.p".format(datasetPath,datasetName), "rb" ))
+		self.test_X = pickle.load(open("{}test_X_{}.p".format(datasetPath,datasetName), "rb" ))
+		self.test_y = pickle.load(open("{}test_y_{}.p".format(datasetPath,datasetName), "rb" ))
+		print("Datasets loaded!")
 
-	convnet = conv_2d(convnet, imageSize*2, 2, activation='elu', weights_init="Xavier")
-	convnet = max_pool_2d(convnet, 2)
+	def saveDataset(self):
+		print("Saving dataset... ")
+		datasetName = self.datasetName()
+		datasetPath = self.config.datasetPath
+		pickle.dump(self.train_X, open("{}train_X_{}.p".format(datasetPath,datasetName), "wb" ))
+		pickle.dump(self.train_y, open("{}train_y_{}.p".format(datasetPath,datasetName), "wb" ))
+		pickle.dump(self.validation_X, open("{}validation_X_{}.p".format(datasetPath,datasetName), "wb" ))
+		pickle.dump(self.validation_y, open("{}validation_y_{}.p".format(datasetPath,datasetName), "wb" ))
+		pickle.dump(self.test_X, open("{}test_X_{}.p".format(datasetPath,datasetName), "wb" ))
+		pickle.dump(self.test_y, open("{}test_y_{}.p".format(datasetPath,datasetName), "wb" ))
+		print("Dataset saved!")
 
-	convnet = conv_2d(convnet, imageSize*4, 2, activation='elu', weights_init="Xavier")
-	convnet = max_pool_2d(convnet, 2)
+	def trainModel(self):
+		self.model.fit(self.train_X, self.train_y, n_epoch=self.config.nbEpoch, batch_size=self.config.batchSize, shuffle=True, validation_set=(self.validation_X, self.validation_y), snapshot_step=100, show_metric=True)
 
-	convnet = fully_connected(convnet, imageSize*8, activation='elu')
-	convnet = dropout(convnet, 0.5)
+	def saveModel(self):
+		self.model.save('eegDNN.tflearn')
 
-	convnet = fully_connected(convnet, nbClasses, activation='softmax')
-	convnet = regression(convnet, optimizer='rmsprop', loss='categorical_crossentropy')
-
-	model = tflearn.DNN(convnet)
-	print("    Model created! ✅")
-	return model
+	def testAccuracy(self):
+		return self.model.evaluate(self.test_X, self.test_y)[0]
