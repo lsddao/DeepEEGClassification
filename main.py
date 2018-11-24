@@ -21,13 +21,11 @@ def eeg_slice():
 
 def eeg_train(load_existing=True):
 	classes = getClasses()
-	model = createModel(len(classes), image_size)
 
 	#Create or load new dataset
 	train_X, train_y, validation_X, validation_y = getDataset(filesPerClass, classes, image_size, validationRatio, testRatio, mode="train")
 
-	#Define run id for graphs
-	run_id = "EEGClasses - "+str(batchSize)+" "+''.join(random.SystemRandom().choice(string.ascii_uppercase) for _ in range(10))
+	model = createModel(len(classes), image_size)
 
 	#Load weights
 	if load_existing:
@@ -39,7 +37,7 @@ def eeg_train(load_existing=True):
 
 	#Train the model
 	print("[+] Training the model...")
-	model.fit(train_X, train_y, n_epoch=nbEpoch, batch_size=batchSize, shuffle=True, validation_set=(validation_X, validation_y), snapshot_step=100, show_metric=True, run_id=run_id)
+	model.fit(train_X, train_y, n_epoch=nbEpoch, batch_size=batchSize, shuffle=True, validation_set=(validation_X, validation_y), snapshot_step=100, show_metric=True)
 	print("    Model trained! ✅")
 
 	#Save trained model
@@ -49,10 +47,11 @@ def eeg_train(load_existing=True):
 
 def eeg_test():
 	classes = getClasses()
-	model = createModel(len(classes), image_size)
 
 	#Create or load new dataset
 	test_X, test_y = getDataset(filesPerClass, classes, image_size, validationRatio, testRatio, mode="test")
+
+	model = createModel(len(classes), image_size)
 
 	#Load weights
 	print("[+] Loading weights...")
@@ -63,5 +62,5 @@ def eeg_test():
 	print("[+] Test accuracy: {} ".format(testAccuracy))
 
 #eeg_slice()
-#eeg_train(False)
-eeg_test()
+eeg_train(False)
+#eeg_test()

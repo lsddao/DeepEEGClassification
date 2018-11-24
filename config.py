@@ -3,7 +3,7 @@ datasetPath = "Data/Dataset/"
 imagesPath = "Data/Slices/"
 
 #Slice parameters
-image_size = 28
+image_size = 64
 fft_window = 90
 
 #Dataset parameters
