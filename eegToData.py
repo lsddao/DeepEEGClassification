@@ -16,13 +16,32 @@ def fft_color(sig):
         vals[i] = int_val(sig[i])
     return vals
 
-def fft(sig):
+def fft(sig, norm=None):
     win = np.hanning(len(sig))
     samples = np.array(sig, dtype='float64')
     samples *= win
-    f = abs(np.fft.rfft(samples, norm='ortho'))
+    f = abs(np.fft.rfft(samples, norm))
     f = np.delete(f, 0)
     return f
+
+def fft_elements(sig):
+    f = fft(sig)
+    f = np.log(f)
+    elements = []
+    elements.append(sum(f[:5]))     #delta
+    elements.append(sum(f[4:9]))    #theta
+    elements.append(sum(f[8:14]))   #alpha
+    elements.append(sum(f[13:31]))  #beta
+    elements.append(sum(f[30:45]))  #gamma
+    elements = np.log(elements)
+    # scaling to 0..1
+    elements -= 2.35
+    elements /= 2.65
+    for i in range(len(elements)):
+        elements[i] = max(elements[i], 0)
+        elements[i] = min(elements[i], 1)
+    return elements
+
 
 def dump_image_impl(imagesPath, arr, subfolder, image_name):
     png.from_array(arr, 'L', info={ "bitdepth" : 8 }).save("{}/{}/{}.png".format(imagesPath, subfolder, image_name))
@@ -65,7 +84,7 @@ def generate_slices(imagesPath, session_id, channel, max_image_len, window):
             samples.append(U)
             if shift == increment:
                 shift = 0
-                f = fft(samples)
+                f = fft(samples, norm='ortho')
                 png_arr[png_arr_idx] = fft_color(f)
                 png_arr_idx += 1
             if png_arr_idx == max_image_len:
