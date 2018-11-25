@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from config import imagesPath
-
 import trackdata
 
 import png
@@ -27,15 +24,15 @@ def fft(sig):
     f = np.delete(f, 0)
     return f
 
-def dump_image_impl(arr, subfolder, image_name):
+def dump_image_impl(imagesPath, arr, subfolder, image_name):
     png.from_array(arr, 'L', info={ "bitdepth" : 8 }).save("{}/{}/{}.png".format(imagesPath, subfolder, image_name))
 
-def dump_image(arr, subfolder, image_name):
+def dump_image(imagesPath, arr, subfolder, image_name):
     size = int(arr.shape[0]/2)
     img = np.rot90(arr[:size,:size])
-    dump_image_impl(img, subfolder, image_name + '_1')
+    dump_image_impl(imagesPath, img, subfolder, image_name + '_1')
     img = np.rot90(arr[size:,:size])
-    dump_image_impl(img, subfolder, image_name + '_2')
+    dump_image_impl(imagesPath, img, subfolder, image_name + '_2')
 
 enjoy_to_class = {
     -2 : "bad",
@@ -45,7 +42,7 @@ enjoy_to_class = {
 	2 : "good"
 }
 
-def generate_slices(session_id, channel, max_image_len, window):
+def generate_slices(imagesPath, session_id, channel, max_image_len, window):
     print("Creating slices for session {}, channel {}, image_size {}, window {}".format(session_id, channel, max_image_len, window))
     max_image_len *= 2
     sample_rate=max_image_len*2
@@ -72,7 +69,7 @@ def generate_slices(session_id, channel, max_image_len, window):
                 png_arr[png_arr_idx] = fft_color(f)
                 png_arr_idx += 1
             if png_arr_idx == max_image_len:
-                dump_image(png_arr, enjoy_to_class[enjoy], '{}_{}_ch{}'.format(session_id, img_idx, channel))
+                dump_image(imagesPath, png_arr, enjoy_to_class[enjoy], '{}_{}_ch{}'.format(session_id, img_idx, channel))
                 png_arr_idx = 0
                 img_idx += 1
         elif "event_name" in x:
@@ -81,7 +78,7 @@ def generate_slices(session_id, channel, max_image_len, window):
     
     print("Created {} images".format(2*img_idx))
 
-def generate_slices_all(channel, max_image_len, window):
+def generate_slices_all(imagesPath, channel, max_image_len, window):
     dbconn = trackdata.DBConnection()
     for session_id in dbconn.all_sessions():
-        generate_slices(session_id, channel, max_image_len, window)
+        generate_slices(imagesPath, session_id, channel, max_image_len, window)
