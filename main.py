@@ -33,17 +33,16 @@ class SimpleDNNConfig(config.GenericConfig):
 	def __init__(self):
 		super().__init__()
 		self.nbPerClass = 30000
-		self.batchSize = 300
-		self.nbEpoch = 32
+		self.batchSize = 3*10000
+		self.nbEpoch = 128
 		self.sample_rate = 256
-		self.channel = 1
+		self.channels = [0, 1, 2, 3]
 		self.fft_window = 90
-		self.nFeatures = 5
+		self.nFeatures = 5 * len(self.channels)
 		self.nbClasses = 3
 
 cfg = SimpleDNNConfig()
-train.train_and_test(load_existing_dataset=False, load_existing_model=False, 
-		modelType=SimpleDNNModel, config=cfg)
+train.train_and_test(load_existing_dataset=True, load_existing_model=False, modelType=SimpleDNNModel, config=cfg)
 
 #model = SimpleDNNModel(cfg)
 #model.createDataset()

@@ -18,8 +18,8 @@ class SimpleDNNModel(model.Model):
 		nbClasses = self.config.nbClasses
 
 		net = input_data(shape=[None, nFeatures])
-		net = fully_connected(net, 32)
-		net = fully_connected(net, 32)
+		net = fully_connected(net, 4*nFeatures)
+		net = fully_connected(net, 4*nFeatures)
 		net = fully_connected(net, nbClasses, activation='softmax')
 		net = regression(net)
 
@@ -32,7 +32,7 @@ class SimpleDNNModel(model.Model):
 	def getData(self):
 		nbPerClass = self.config.nbPerClass
 		sample_rate = self.config.sample_rate
-		channel = self.config.channel
+		channels = self.config.channels
 		window = self.config.fft_window
 		increment = int(sample_rate*(1-window/100))
 		enjoy_to_label = {
@@ -49,14 +49,14 @@ class SimpleDNNModel(model.Model):
 			"good" : 0
 		}
 
-		f_min = 4
-		f_max = 0
+		#f_min = 4
+		#f_max = 0
 
 		data = []
 		dbconn = trackdata.DBConnection()
 		shift = 0
 		for session_id in dbconn.all_sessions():
-			samples = collections.deque(maxlen=sample_rate)
+			samples = [collections.deque(maxlen=sample_rate) for channel in channels]
 			enjoy = 0
 			doc = dbconn.session_data(session_id, 'eeg')
 			print("Creating data for session {}...".format(session_id))
@@ -65,18 +65,21 @@ class SimpleDNNModel(model.Model):
 					print(dataPerClass)
 					return data
 				if "channel_data" in x:
-					U = x["channel_data"][channel]
-					if len(samples) == samples.maxlen:
+					if len(samples[0]) == samples[0].maxlen:
 						shift += 1
-					samples.append(U)
+					U = x["channel_data"]
+					for channel_idx in range(len(channels)):
+						samples[channel_idx].append(U[channels[channel_idx]])
 					if shift == increment:
-						lbl = enjoy_to_class[enjoy]
 						shift = 0
+						lbl = enjoy_to_class[enjoy]
 						if dataPerClass[lbl] < nbPerClass:
-							f = fft_elements(samples)
-							f_min = min(f_min, np.min(f))
-							f_max = max(f_max, np.max(f))
 							label = enjoy_to_label[enjoy]
+							f = []
+							for channel_idx in range(len(channels)):
+								f.extend(fft_elements(samples[channel_idx]))
+							#f_min = min(f_min, np.min(f))
+							#f_max = max(f_max, np.max(f))
 							data.append((f,label))
 							dataPerClass[lbl] += 1
 				elif "event_name" in x:
