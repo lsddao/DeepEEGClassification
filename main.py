@@ -26,25 +26,18 @@ def train_and_test_CNN():
 	train.train_and_test(load_existing_dataset=False, load_existing_model=False, 
 		modelType=CNNModel, config=cfg)
 
-#train_and_test_CNN()
-#generate_slices_all(imagesPath=imagesPath, channel=1, max_image_len=imageSize, window=90)
-
 class SimpleDNNConfig(config.GenericConfig):
 	def __init__(self):
 		super().__init__()
-		self.nbPerClass = 30000
-		self.batchSize = 3*10000
-		self.nbEpoch = 128
+		self.nbPerClass = 37000
+		self.batchSize = 64
+		self.nbEpoch = 16
 		self.sample_rate = 256
 		self.channels = [0, 1, 2, 3]
 		self.fft_window = 90
-		self.nFeatures = 5 * len(self.channels)
+		self.nFeatures = 45*len(self.channels)
 		self.nbClasses = 3
+		self.freqBin = None
 
 cfg = SimpleDNNConfig()
-train.train_and_test(load_existing_dataset=True, load_existing_model=False, modelType=SimpleDNNModel, config=cfg)
-
-#model = SimpleDNNModel(cfg)
-#model.createDataset()
-#data = model.getData()
-#print(data)
+train.train_and_test(load_existing_dataset=False, load_existing_model=False, modelType=SimpleDNNModel, config=cfg)

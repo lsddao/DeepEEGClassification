@@ -5,7 +5,7 @@ import numpy as np
 from random import shuffle
 import collections
 
-from tflearn import DNN, input_data, fully_connected, regression
+from tflearn import DNN, input_data, fully_connected, regression, init_graph
 from eegToData import fft_elements, enjoy_to_class
 
 class SimpleDNNModel(model.Model):
@@ -17,9 +17,11 @@ class SimpleDNNModel(model.Model):
 		nFeatures = self.config.nFeatures
 		nbClasses = self.config.nbClasses
 
+		init_graph(num_cores=4)
+
 		net = input_data(shape=[None, nFeatures])
-		net = fully_connected(net, 4*nFeatures)
-		net = fully_connected(net, 4*nFeatures)
+		net = fully_connected(net, 4*nFeatures, activation='elu', weights_init="Xavier")
+		net = fully_connected(net, 4*nFeatures, activation='elu', weights_init="Xavier")
 		net = fully_connected(net, nbClasses, activation='softmax')
 		net = regression(net)
 
@@ -49,9 +51,6 @@ class SimpleDNNModel(model.Model):
 			"good" : 0
 		}
 
-		#f_min = 4
-		#f_max = 0
-
 		data = []
 		dbconn = trackdata.DBConnection()
 		shift = 0
@@ -78,8 +77,6 @@ class SimpleDNNModel(model.Model):
 							f = []
 							for channel_idx in range(len(channels)):
 								f.extend(fft_elements(samples[channel_idx]))
-							#f_min = min(f_min, np.min(f))
-							#f_max = max(f_max, np.max(f))
 							data.append((f,label))
 							dataPerClass[lbl] += 1
 				elif "event_name" in x:

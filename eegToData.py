@@ -4,6 +4,8 @@ import png
 import numpy as np
 import collections
 
+from freqlogminmax import minmax
+
 def int_val(f):
     v = int(10*f)
     v = min(v, 255)
@@ -28,18 +30,22 @@ def fft_elements(sig):
     f = fft(sig)
     f = np.log(f)
     elements = []
-    elements.append(sum(f[:5]))     #delta
-    elements.append(sum(f[4:9]))    #theta
-    elements.append(sum(f[8:14]))   #alpha
-    elements.append(sum(f[13:31]))  #beta
-    elements.append(sum(f[30:45]))  #gamma
-    elements = np.log(elements)
+    #elements.append(sum(f[:5]))     #delta
+    #elements.append(sum(f[4:9]))    #theta
+    #elements.append(sum(f[8:14]))   #alpha
+    #elements.append(sum(f[13:31]))  #beta
+    #elements.append(sum(f[30:45]))  #gamma
+    #elements.append(sum(f[65:]))     #other
     # scaling to 0..1
-    elements -= 2.35
-    elements /= 2.65
-    for i in range(len(elements)):
-        elements[i] = max(elements[i], 0)
-        elements[i] = min(elements[i], 1)
+    for freq_bin in range(45):
+        freq = f[freq_bin]
+        r_min = minmax[freq_bin][0]
+        r_max = minmax[freq_bin][1]
+        freq -= r_min
+        freq /= (r_max - r_min)
+        freq = max(freq, 0.0)
+        freq = min(freq, 1.0)
+        elements.append(freq)
     return elements
 
 
