@@ -29,7 +29,7 @@ def train_and_test_CNN():
 class SimpleDNNConfig(config.GenericConfig):
 	def __init__(self):
 		super().__init__()
-		self.nbPerClass = 37000
+		self.nbPerClass = 48450
 		self.batchSize = 64
 		self.nbEpoch = 16
 		self.sample_rate = 256
@@ -37,7 +37,6 @@ class SimpleDNNConfig(config.GenericConfig):
 		self.fft_window = 90
 		self.nFeatures = 45*len(self.channels)
 		self.nbClasses = 3
-		self.freqBin = None
 
 cfg = SimpleDNNConfig()
-train.train_and_test(load_existing_dataset=False, load_existing_model=False, modelType=SimpleDNNModel, config=cfg)
+train.train_and_test(load_existing_dataset=True, load_existing_model=True, modelType=SimpleDNNModel, config=cfg)

@@ -17,15 +17,13 @@ class SimpleDNNModel(model.Model):
 		nFeatures = self.config.nFeatures
 		nbClasses = self.config.nbClasses
 
-		init_graph(num_cores=4)
-
 		net = input_data(shape=[None, nFeatures])
 		net = fully_connected(net, 4*nFeatures, activation='elu', weights_init="Xavier")
 		net = fully_connected(net, 4*nFeatures, activation='elu', weights_init="Xavier")
 		net = fully_connected(net, nbClasses, activation='softmax')
 		net = regression(net)
 
-		self.model = DNN(net)
+		self.model = DNN(net, tensorboard_verbose=3)
 		print("Model created!")
 
 	def datasetName(self):

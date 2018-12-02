@@ -26,4 +26,7 @@ def train_and_test(load_existing_dataset, load_existing_model, modelType, config
 	model.saveModel()
 	print("Weights saved!")
 
-	print("Test accuracy: {} ".format(model.testAccuracy()))
+	acc = model.testAccuracy()
+	print("Test accuracy: {} ".format(acc))
+	print('Corrected accuracy (100%): {}'.format(100*model.correctedAcc(acc)))
+	return acc

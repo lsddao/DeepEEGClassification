@@ -1,4 +1,5 @@
 import pickle
+import datetime as dt
 
 class Model:
 	def __init__(self, config):
@@ -42,10 +43,17 @@ class Model:
 		print("Dataset saved!")
 
 	def trainModel(self):
-		self.model.fit(self.train_X, self.train_y, n_epoch=self.config.nbEpoch, batch_size=self.config.batchSize, shuffle=True, validation_set=(self.validation_X, self.validation_y), snapshot_step=100, show_metric=True)
+		run_id = 'EEG_{}'.format(dt.datetime.now().strftime("%Y%m%d%H%M%S"))
+		self.model.fit(self.train_X, self.train_y, n_epoch=self.config.nbEpoch, batch_size=self.config.batchSize, 
+			shuffle=True, validation_set=(self.validation_X, self.validation_y), snapshot_step=100, show_metric=True, run_id=run_id)
 
 	def saveModel(self):
 		self.model.save('eegDNN.tflearn')
 
+	def correctedAcc(self, acc):
+		rnd_acc = 1.0/self.config.nbClasses
+		return (acc - rnd_acc) / (1.0 - acc)
+
 	def testAccuracy(self):
-		return self.model.evaluate(self.test_X, self.test_y)[0]
+		res = self.model.evaluate(self.test_X, self.test_y)
+		return res[0]
