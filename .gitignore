@@ -10,3 +10,5 @@ checkpoint
 .vscode/.ropeproject/objectdb
 .vscode/.ropeproject/config.py
 temp-plot.html
+*.zip
+*.log
