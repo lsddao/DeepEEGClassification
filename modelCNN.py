@@ -42,16 +42,18 @@ class CNNModel(model.Model):
 
 	def datasetName(self):
 		return 'CNNModel'
+
+	def X_shape(self):
+		imageSize = self.config.imageSize
+		return [-1, imageSize, imageSize, 1]
 		
 	# Creates dataset from configured folder with PNG images
 	# Subfolder == image class
-	def createDataset(self):
+	def getData(self):
 		nbPerClass = self.config.nbPerClass
 		classes = self.config.classes 
-		sliceSize = self.config.imageSize
-		validationRatio = self.config.validationRatio
-		testRatio = self.config.testRatio
 		imagesPath = self.config.imagesPath
+		imageSize = self.config.imageSize
 
 		data = []
 		for image_class in classes:
@@ -65,26 +67,8 @@ class CNNModel(model.Model):
 
 			#Add data (X,y)
 			for filename in filenames:
-				imgData = getImageData(imagesPath+image_class+"/"+filename, sliceSize)
+				imgData = getImageData(imagesPath+image_class+"/"+filename, imageSize)
 				label = [1. if image_class == g else 0. for g in classes]
 				data.append((imgData,label))
 
-		#Shuffle data
-		shuffle(data)
-
-		#Extract X and y
-		X,y = zip(*data)
-
-		#Split data
-		validationNb = int(len(X)*validationRatio)
-		testNb = int(len(X)*testRatio)
-		trainNb = len(X)-(validationNb + testNb)
-
-		#Prepare for Tflearn at the same time
-		self.train_X = np.array(X[:trainNb]).reshape([-1, sliceSize, sliceSize, 1])
-		self.train_y = np.array(y[:trainNb])
-		self.validation_X = np.array(X[trainNb:trainNb+validationNb]).reshape([-1, sliceSize, sliceSize, 1])
-		self.validation_y = np.array(y[trainNb:trainNb+validationNb])
-		self.test_X = np.array(X[-testNb:]).reshape([-1, sliceSize, sliceSize, 1])
-		self.test_y = np.array(y[-testNb:])
-		print("Dataset created!")
+		return data

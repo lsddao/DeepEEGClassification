@@ -1,5 +1,7 @@
 import pickle
 import datetime as dt
+from random import shuffle
+import numpy as np
 
 class Model:
 	def __init__(self, config):
@@ -11,9 +13,6 @@ class Model:
 
 	def loadModel(self):
 		self.model.load('eegDNN.tflearn')
-
-	def createDataset(self):
-		raise NotImplementedError
 
 	def datasetName(self):
 		raise NotImplementedError
@@ -57,3 +56,37 @@ class Model:
 	def testAccuracy(self):
 		res = self.model.evaluate(self.test_X, self.test_y)
 		return res[0]
+	
+	def X_shape(self):
+		raise NotImplementedError
+
+	def getData(self):
+		raise NotImplementedError
+			
+	def createDataset(self):
+		print("Creating dataset...")
+		validationRatio = self.config.validationRatio
+		testRatio = self.config.testRatio
+	
+		data = self.getData()
+
+		#Shuffle data
+		shuffle(data)
+
+		#Extract X and y
+		X,y = zip(*data)
+
+		#Split data
+		validationNb = int(len(X)*validationRatio)
+		testNb = int(len(X)*testRatio)
+		trainNb = len(X)-(validationNb + testNb)
+		
+		#Prepare test arrays
+		self.train_X = np.array(X[:trainNb]).reshape(self.X_shape())
+		self.train_y = np.array(y[:trainNb])
+		self.validation_X = np.array(X[trainNb:trainNb+validationNb]).reshape(self.X_shape())
+		self.validation_y = np.array(y[trainNb:trainNb+validationNb])
+		self.test_X = np.array(X[-testNb:]).reshape(self.X_shape())
+		self.test_y = np.array(y[-testNb:])
+
+		print("Dataset created!")

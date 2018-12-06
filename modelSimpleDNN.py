@@ -1,8 +1,6 @@
 import model
 import trackdata
 
-import numpy as np
-from random import shuffle
 import collections
 
 from tflearn import DNN, input_data, fully_connected, regression, DataPreprocessing
@@ -31,6 +29,9 @@ class SimpleDNNModel(model.Model):
 
 	def datasetName(self):
 		return 'simpleDNNModel'
+
+	def X_shape(self):
+		return [-1, self.config.nFeatures]
 
 	def getData(self):
 		nbPerClass = self.config.nbPerClass
@@ -86,33 +87,3 @@ class SimpleDNNModel(model.Model):
 		
 		print(dataPerClass)
 		return data
-		
-	def createDataset(self):
-		print("Creating dataset...")
-		validationRatio = self.config.validationRatio
-		testRatio = self.config.testRatio
-		numFeatures = self.config.nFeatures
-	
-		data = self.getData()
-
-		#Shuffle data
-		shuffle(data)
-
-		#Extract X and y
-		X,y = zip(*data)
-
-		#Split data
-		validationNb = int(len(X)*validationRatio)
-		testNb = int(len(X)*testRatio)
-		trainNb = len(X)-(validationNb + testNb)
-
-		
-		#Prepare for Tflearn at the same time
-		self.train_X = np.array(X[:trainNb]).reshape([-1, numFeatures])
-		self.train_y = np.array(y[:trainNb])
-		self.validation_X = np.array(X[trainNb:trainNb+validationNb]).reshape([-1, numFeatures])
-		self.validation_y = np.array(y[trainNb:trainNb+validationNb])
-		self.test_X = np.array(X[-testNb:]).reshape([-1, numFeatures])
-		self.test_y = np.array(y[-testNb:])
-
-		print("Dataset created!")
