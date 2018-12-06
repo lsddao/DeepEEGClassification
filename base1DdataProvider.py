@@ -3,6 +3,13 @@ import trackdata
 
 from eegToData import enjoy_to_class
 
+class NotEnoughData(BaseException):
+	def __init__(self, value):
+		self.value = value
+
+	def __str__(self):
+		return repr(self.value)
+
 class Base1DDataProvider(BaseDataProvider):
 	def __init__(self, config):
 		super().__init__(config)
@@ -49,7 +56,6 @@ class Base1DDataProvider(BaseDataProvider):
 			print("Creating data for session {}...".format(session_id))
 			for x in doc:
 				if self.isFull():
-					print(self.dataPerClass)
 					return self.data
 				if "channel_data" in x:
 					U = x["channel_data"]
@@ -58,5 +64,8 @@ class Base1DDataProvider(BaseDataProvider):
 					if x["event_name"] == "enjoy_changed":
 						self.enjoy = x["value"]
 		
-		print(self.dataPerClass)
+		if not self.isFull():
+			print(self.dataPerClass)
+			raise NotEnoughData("Not enough data per class")
+
 		return self.data
