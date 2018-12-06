@@ -13,23 +13,25 @@ def train_and_test(load_existing_dataset, load_existing_model, modelType, dataPr
 	model.createModel()
 
 	if load_existing_model:
-		print("Loading weights...")
+		print("Loading model...")
 		model.loadModel()
-		print("Weights loaded!")
+		print("Model loaded!")
 	else:
-		print("Training model from scratch")
+		#Train the model
+		print("Training the model...")
+		model.trainModel()
+		print("Model trained!")
+		#Save trained model
+		print("Saving the model...")
+		model.saveModel()
+		print("Model saved!")
 
-	#Train the model
-	print("Training the model...")
-	model.trainModel()
-	print("Model trained!")
-
-	#Save trained model
-	print("Saving the weights...")
-	model.saveModel()
-	print("Weights saved!")
+	acc = model.validationAccuracy()
+	print("Validation accuracy: {} ".format(acc))
+	print('Corrected accuracy (100%): {}'.format(100*model.correctedAcc(acc)))
 
 	acc = model.testAccuracy()
 	print("Test accuracy: {} ".format(acc))
 	print('Corrected accuracy (100%): {}'.format(100*model.correctedAcc(acc)))
+
 	return acc

@@ -49,11 +49,14 @@ class Model:
 
 	def correctedAcc(self, acc):
 		rnd_acc = 1.0/self.config.nbClasses
-		return (acc - rnd_acc) / (1.0 - acc)
+		return (acc - rnd_acc) / (1.0 - rnd_acc)
 
 	def testAccuracy(self):
 		raise NotImplementedError
 	
+	def validationAccuracy(self):
+		raise NotImplementedError
+
 	def createDataset(self):
 		print("Creating dataset...")
 		validationRatio = self.config.validationRatio
