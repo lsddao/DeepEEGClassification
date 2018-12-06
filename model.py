@@ -1,5 +1,4 @@
 import pickle
-import datetime as dt
 from random import shuffle
 import numpy as np
 
@@ -12,7 +11,7 @@ class Model:
 		raise NotImplementedError
 
 	def loadModel(self):
-		self.model.load('eegDNN.tflearn')
+		raise NotImplementedError
 
 	def datasetName(self):
 		raise NotImplementedError
@@ -42,20 +41,17 @@ class Model:
 		print("Dataset saved!")
 
 	def trainModel(self):
-		run_id = 'EEG_{}'.format(dt.datetime.now().strftime("%Y%m%d%H%M%S"))
-		self.model.fit(self.train_X, self.train_y, n_epoch=self.config.nbEpoch, batch_size=self.config.batchSize, 
-			shuffle=True, validation_set=(self.validation_X, self.validation_y), snapshot_step=100, show_metric=True, run_id=run_id)
+		raise NotImplementedError
 
 	def saveModel(self):
-		self.model.save('eegDNN.tflearn')
+		raise NotImplementedError
 
 	def correctedAcc(self, acc):
 		rnd_acc = 1.0/self.config.nbClasses
 		return (acc - rnd_acc) / (1.0 - acc)
 
 	def testAccuracy(self):
-		res = self.model.evaluate(self.test_X, self.test_y)
-		return res[0]
+		raise NotImplementedError
 	
 	def X_shape(self):
 		raise NotImplementedError

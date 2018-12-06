@@ -1,6 +1,6 @@
-import model
+from baseTFLearnModel import BaseTFLearnModel
 import os
-import numpy as np
+
 from random import shuffle
 from imageFilesTools import getImageData
 from tflearn import DNN
@@ -8,7 +8,7 @@ from tflearn.layers.conv import conv_2d, max_pool_2d
 from tflearn.layers.core import input_data, dropout, fully_connected
 from tflearn.layers.estimator import regression
 
-class CNNModel(model.Model):
+class CNNModel(BaseTFLearnModel):
 	def __init__(self, config):
 		super().__init__(config)
 	

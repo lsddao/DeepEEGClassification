@@ -1,4 +1,4 @@
-import model
+from baseTFLearnModel import BaseTFLearnModel
 import trackdata
 
 import collections
@@ -6,7 +6,7 @@ import collections
 from tflearn import DNN, input_data, fully_connected, regression, DataPreprocessing
 from eegToData import fft_elements, enjoy_to_class
 
-class SimpleDNNModel(model.Model):
+class SimpleDNNModel(BaseTFLearnModel):
 	def __init__(self, config):
 		super().__init__(config)
 	
