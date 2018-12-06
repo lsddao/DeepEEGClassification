@@ -16,6 +16,9 @@ class SimpleSVMModel(Model):
 	def saveModel(self):
 		pickle.dump(self.model, open("{}.mdl".format(self.datasetName()), "wb" ))
 
+	def trainAccuracy(self):
+		return self.dataSetAccuracy(self.train_X, self.train_y)
+
 	def testAccuracy(self):
 		return self.dataSetAccuracy(self.test_X, self.test_y)
 

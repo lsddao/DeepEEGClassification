@@ -26,6 +26,10 @@ def train_and_test(load_existing_dataset, load_existing_model, modelType, dataPr
 		model.saveModel()
 		print("Model saved!")
 
+	acc = model.trainAccuracy()
+	print("Train accuracy: {} ".format(acc))
+	print('Corrected accuracy (100%): {}'.format(100*model.correctedAcc(acc)))
+
 	acc = model.validationAccuracy()
 	print("Validation accuracy: {} ".format(acc))
 	print('Corrected accuracy (100%): {}'.format(100*model.correctedAcc(acc)))

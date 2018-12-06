@@ -28,24 +28,24 @@ def fft(sig, norm=None):
 
 def fft_elements(sig):
     f = fft(sig)
-    f = np.log(f)
+    #f = np.log(f)
     elements = []
-    #elements.append(sum(f[:5]))     #delta
-    #elements.append(sum(f[4:9]))    #theta
-    #elements.append(sum(f[8:14]))   #alpha
-    #elements.append(sum(f[13:31]))  #beta
-    #elements.append(sum(f[30:45]))  #gamma
-    #elements.append(sum(f[65:]))     #other
+    elements.append(sum(f[:5]))     #delta
+    elements.append(sum(f[4:9]))    #theta
+    elements.append(sum(f[8:14]))   #alpha
+    elements.append(sum(f[13:31]))  #beta
+    elements.append(sum(f[30:45]))  #gamma
+    elements.append(sum(f[65:]))     #other
     # scaling to 0..1
-    for freq_bin in range(45):
-        freq = f[freq_bin]
-        r_min = minmax[freq_bin][0]
-        r_max = minmax[freq_bin][1]
-        freq -= r_min
-        freq /= (r_max - r_min)
-        freq = max(freq, 0.0)
-        freq = min(freq, 1.0)
-        elements.append(freq)
+    #for freq_bin in range(45):
+    #    freq = f[freq_bin]
+    #    r_min = minmax[freq_bin][0]
+    #    r_max = minmax[freq_bin][1]
+    #    freq -= r_min
+    #    freq /= (r_max - r_min)
+    #    freq = max(freq, 0.0)
+    #    freq = min(freq, 1.0)
+    #    elements.append(freq)
     return elements
 
 

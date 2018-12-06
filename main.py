@@ -50,12 +50,12 @@ class SimpleSVMConfig(config.GenericConfig):
 		self.nbPerClass = 48500
 		self.sample_rate = 256
 		self.fft_window = 90
-		self.nFeatures = 45*4
+		self.nFeatures = 6*4
 		self.nbClasses = 3
 
 def try_SVM():
 	cfg = SimpleSVMConfig()
-	train.train_and_test(load_existing_dataset=True, load_existing_model=False, 
+	train.train_and_test(load_existing_dataset=False, load_existing_model=False, 
 		modelType=SimpleSVMModel, dataProviderType=FFTDataProvider, labelProviderType=SimpleSVMLabelProvider, config=cfg
 	)
 
