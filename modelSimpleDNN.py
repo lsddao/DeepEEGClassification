@@ -1,5 +1,6 @@
 from baseTFLearnModel import BaseTFLearnModel
 from tflearn import DNN, input_data, fully_connected, regression, DataPreprocessing
+from labelProvider import BaseLabelProvider
 
 class SimpleDNNModel(BaseTFLearnModel):
 	def __init__(self, config):
@@ -24,3 +25,27 @@ class SimpleDNNModel(BaseTFLearnModel):
 
 	def datasetName(self):
 		return 'simpleDNNModel'
+
+class SimpleDNNLabelProvider(BaseLabelProvider):
+	def getLabel(self, value):
+		to_label = {
+			-2 : [1., 0., 0.],
+			-1 : [1., 0., 0.],
+			0 : [0., 1., 0.],
+			1 : [0., 0., 1.],
+			2 : [0., 0., 1.]
+		}
+		return to_label[value]
+        
+	def getClassName(self, value):
+		to_class = {
+ 		   -2 : "bad",
+			-1 : "bad",
+			0 : "ok",
+			1 : "good",
+			2 : "good"
+		}
+		return to_class[value]
+
+	def getClasses(self):
+		return ['bad', 'ok', 'good']

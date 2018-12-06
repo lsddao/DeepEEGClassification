@@ -1,6 +1,7 @@
 class BaseDataProvider():
-	def __init__(self, config):
+	def __init__(self, config, labelProvider):
 		self.config = config
+		self.labelProvider = labelProvider
 	
 	def X_shape(self):
 		raise NotImplementedError

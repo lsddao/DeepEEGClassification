@@ -1,8 +1,6 @@
 from baseDataProvider import BaseDataProvider
 import trackdata
 
-from eegToData import enjoy_to_class
-
 class NotEnoughData(BaseException):
 	def __init__(self, value):
 		self.value = value
@@ -11,20 +9,20 @@ class NotEnoughData(BaseException):
 		return repr(self.value)
 
 class Base1DDataProvider(BaseDataProvider):
-	def __init__(self, config):
-		super().__init__(config)
+	def __init__(self, config, labelProvider):
+		super().__init__(config, labelProvider)
 		self.dataPerClass = dict()
-		for key in self.config.classes:
+		for key in self.labelProvider.getClasses():
 			self.dataPerClass[key] = 0
 
 	def X_shape(self):
 		return [-1, self.config.nFeatures]
 
 	def getLabel(self):
-		raise NotImplementedError
+		return self.labelProvider.getLabel(self.enjoy)
 
 	def getClassName(self):
-		return enjoy_to_class[self.enjoy]
+		return self.labelProvider.getClassName(self.enjoy)
 
 	def consumeEEG(self, channel_data):
 		raise NotImplementedError

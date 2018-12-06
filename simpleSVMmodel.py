@@ -1,5 +1,5 @@
 from model import Model
-
+from labelProvider import BaseLabelProvider
 from sklearn import svm
 
 class SimpleSVMModel(Model):
@@ -32,3 +32,20 @@ class SimpleSVMModel(Model):
 
 	def datasetName(self):
 		return 'SimpleSVMModel'
+
+class SimpleSVMLabelProvider(BaseLabelProvider):
+	def getLabel(self, value):
+		return self.getClassName(value)
+        
+	def getClassName(self, value):
+		to_class = {
+ 		   -2 : "bad",
+			-1 : "bad",
+			0 : "ok",
+			1 : "good",
+			2 : "good"
+		}
+		return to_class[value]
+
+	def getClasses(self):
+		return ['bad', 'ok', 'good']

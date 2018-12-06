@@ -1,13 +1,12 @@
 import pickle
 from random import shuffle
 import numpy as np
-from baseDataProvider import BaseDataProvider
 
 class Model:
 	def __init__(self, config):
 		self.config = config
 		self.model = None
-		self.dataProvider = BaseDataProvider(config)
+		self.dataProvider = None
 	
 	def createModel(self):
 		raise NotImplementedError
