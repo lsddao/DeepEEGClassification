@@ -1,11 +1,13 @@
 import pickle
 from random import shuffle
 import numpy as np
+from baseDataProvider import BaseDataProvider
 
 class Model:
 	def __init__(self, config):
 		self.config = config
 		self.model = None
+		self.dataProvider = BaseDataProvider(config)
 	
 	def createModel(self):
 		raise NotImplementedError
@@ -53,18 +55,12 @@ class Model:
 	def testAccuracy(self):
 		raise NotImplementedError
 	
-	def X_shape(self):
-		raise NotImplementedError
-
-	def getData(self):
-		raise NotImplementedError
-			
 	def createDataset(self):
 		print("Creating dataset...")
 		validationRatio = self.config.validationRatio
 		testRatio = self.config.testRatio
 	
-		data = self.getData()
+		data = self.dataProvider.getData()
 
 		#Shuffle data
 		shuffle(data)
@@ -78,11 +74,13 @@ class Model:
 		trainNb = len(X)-(validationNb + testNb)
 		
 		#Prepare test arrays
-		self.train_X = np.array(X[:trainNb]).reshape(self.X_shape())
+		x_shape = self.dataProvider.X_shape()
+
+		self.train_X = np.array(X[:trainNb]).reshape(x_shape)
 		self.train_y = np.array(y[:trainNb])
-		self.validation_X = np.array(X[trainNb:trainNb+validationNb]).reshape(self.X_shape())
+		self.validation_X = np.array(X[trainNb:trainNb+validationNb]).reshape(x_shape)
 		self.validation_y = np.array(y[trainNb:trainNb+validationNb])
-		self.test_X = np.array(X[-testNb:]).reshape(self.X_shape())
+		self.test_X = np.array(X[-testNb:]).reshape(x_shape)
 		self.test_y = np.array(y[-testNb:])
 
 		print("Dataset created!")

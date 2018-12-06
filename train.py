@@ -1,6 +1,8 @@
 # main training procedure
-def train_and_test(load_existing_dataset, load_existing_model, modelType, config):
+def train_and_test(load_existing_dataset, load_existing_model, modelType, dataProviderType, config):
 	model = modelType(config)
+	model.dataProvider = dataProviderType(config)
+	
 	if load_existing_dataset:
 		model.loadDataset()
 	else:
