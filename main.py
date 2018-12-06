@@ -3,6 +3,7 @@ import os
 import config
 from modelCNN import CNNModel
 from modelSimpleDNN import SimpleDNNModel
+from FFTDataProvider import FFTDataProvider
 
 from eegToData import generate_slices_all
 
@@ -29,14 +30,14 @@ def train_and_test_CNN():
 class SimpleDNNConfig(config.GenericConfig):
 	def __init__(self):
 		super().__init__()
-		self.nbPerClass = 30000
-		self.batchSize = 100000
-		self.nbEpoch = 128
+		self.nbPerClass = 1000
+		self.batchSize = 128
+		self.nbEpoch = 16
 		self.sample_rate = 256
-		self.channels = [0, 1, 2, 3]
 		self.fft_window = 90
-		self.nFeatures = 45*len(self.channels)
-		self.nbClasses = 3
+		self.nFeatures = 45*4
+		self.classes = ['bad', 'ok', 'good']
+		self.nbClasses = len(self.classes)
 
 cfg = SimpleDNNConfig()
-train.train_and_test(load_existing_dataset=True, load_existing_model=True, modelType=SimpleDNNModel, config=cfg)
+train.train_and_test(load_existing_dataset=False, load_existing_model=False, modelType=SimpleDNNModel, dataProviderType=FFTDataProvider, config=cfg)
