@@ -5,7 +5,7 @@ import numpy as np
 from random import shuffle
 import collections
 
-from tflearn import DNN, input_data, fully_connected, regression, init_graph
+from tflearn import DNN, input_data, fully_connected, regression, DataPreprocessing
 from eegToData import fft_elements, enjoy_to_class
 
 class SimpleDNNModel(model.Model):
@@ -17,9 +17,12 @@ class SimpleDNNModel(model.Model):
 		nFeatures = self.config.nFeatures
 		nbClasses = self.config.nbClasses
 
-		net = input_data(shape=[None, nFeatures])
-		net = fully_connected(net, 4*nFeatures, activation='elu', weights_init="Xavier")
-		net = fully_connected(net, 4*nFeatures, activation='elu', weights_init="Xavier")
+		preprocess = DataPreprocessing()
+		preprocess.add_featurewise_zero_center()
+		preprocess.add_featurewise_stdnorm()
+
+		net = input_data(shape=[None, nFeatures], data_preprocessing=preprocess)
+		net = fully_connected(net, 32, activation='elu', weights_init="Xavier")
 		net = fully_connected(net, nbClasses, activation='softmax')
 		net = regression(net)
 

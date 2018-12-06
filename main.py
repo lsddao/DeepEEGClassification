@@ -29,9 +29,9 @@ def train_and_test_CNN():
 class SimpleDNNConfig(config.GenericConfig):
 	def __init__(self):
 		super().__init__()
-		self.nbPerClass = 48450
-		self.batchSize = 64
-		self.nbEpoch = 16
+		self.nbPerClass = 30000
+		self.batchSize = 100000
+		self.nbEpoch = 128
 		self.sample_rate = 256
 		self.channels = [0, 1, 2, 3]
 		self.fft_window = 90
