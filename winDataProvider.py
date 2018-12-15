@@ -7,8 +7,7 @@ class WindowBasedDataProvider(SequentialDataProvider):
 
 		sample_rate = self.config.sample_rate
 		self.samples = [deque(maxlen=sample_rate) for channel in range(4)]
-		window = self.config.fft_window
-		self.increment = int(sample_rate*(1-window/100))
+		self.increment = self.config.window_step
 		self.shift = 0
 
 	def getFeaturesFromWindow(self):

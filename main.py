@@ -65,16 +65,16 @@ class LSTMConfig(config.GenericConfig):
 		super().__init__()
 		self.nbPerClass = 1024
 		self.sample_rate = 256
-		self.fft_window = 90
+		self.window_step = 32
 		self.nChannels = 4
 		self.nbClasses = 3
 		self.sequenceLength = self.sample_rate
 		self.batchSize = 32
-		self.nbEpoch = 8
+		self.nbEpoch = 16
 
 def try_LSTM():
 	cfg = LSTMConfig()
-	train.train_and_test(load_existing_dataset=False, load_existing_model=False, 
+	train.train_and_test(load_existing_dataset=True, load_existing_model=False, 
 		modelType=LSTMModel, dataProviderType=RawEEGDataProvider, labelProviderType=SimpleDNNLabelProvider, config=cfg)
 
 try_LSTM()

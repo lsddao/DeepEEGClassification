@@ -1,5 +1,5 @@
 from baseTFLearnModel import BaseTFLearnModel
-from tflearn import DNN, input_data, fully_connected, regression, lstm
+from tflearn import DNN, input_data, fully_connected, regression, lstm, dropout
 from labelProvider import BaseLabelProvider
 
 class LSTMModel(BaseTFLearnModel):
@@ -13,12 +13,14 @@ class LSTMModel(BaseTFLearnModel):
 		nChannels = self.config.nChannels
 
 		net = input_data(shape=[None, sequenceLength, nChannels])
-		net = lstm(net, n_units=nChannels, activation='relu', dropout=0.2, return_seq=True)
-		net = lstm(net, n_units=nChannels/2, activation='sigmoid')
-		net = fully_connected(net, nbClasses, activation='softmax')
-		net = regression(net)
+		net = lstm(net, n_units=nChannels*2, activation='relu', return_seq=True)
+		net = dropout(net, 0.2)
+		net = lstm(net, n_units=nChannels, activation='sigmoid')
+		net = fully_connected(net, nbClasses, activation='sigmoid')
+		net = regression(net, optimizer='rmsprop')
 
-		self.model = DNN(net, tensorboard_verbose=0)
+		self.model = DNN(net, tensorboard_verbose=3)
+
 		print("Model created!")
 
 	def datasetName(self):
