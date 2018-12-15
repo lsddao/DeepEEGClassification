@@ -19,7 +19,7 @@ class LSTMModel(BaseTFLearnModel):
 		net = fully_connected(net, nbClasses, activation='sigmoid')
 		net = regression(net, optimizer='rmsprop')
 
-		self.model = DNN(net, tensorboard_verbose=3)
+		self.model = DNN(net)
 
 		print("Model created!")
 
