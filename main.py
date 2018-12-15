@@ -5,6 +5,8 @@ from modelCNN import CNNModel
 from modelSimpleDNN import SimpleDNNModel, SimpleDNNLabelProvider
 from simpleSVMmodel import SimpleSVMModel, SimpleSVMLabelProvider
 from FFTDataProvider import FFTDataProvider
+from modelLSTM import LSTMModel
+from rawEEGDataProvider import RawEEGDataProvider
 
 from eegToData import generate_slices_all
 
@@ -56,7 +58,23 @@ class SimpleSVMConfig(config.GenericConfig):
 def try_SVM():
 	cfg = SimpleSVMConfig()
 	train.train_and_test(load_existing_dataset=False, load_existing_model=False, 
-		modelType=SimpleSVMModel, dataProviderType=FFTDataProvider, labelProviderType=SimpleSVMLabelProvider, config=cfg
-	)
+		modelType=SimpleSVMModel, dataProviderType=FFTDataProvider, labelProviderType=SimpleSVMLabelProvider, config=cfg)
 
-try_MLP()
+class LSTMConfig(config.GenericConfig):
+	def __init__(self):
+		super().__init__()
+		self.nbPerClass = 1024
+		self.sample_rate = 256
+		self.fft_window = 90
+		self.nChannels = 4
+		self.nbClasses = 3
+		self.sequenceLength = self.sample_rate
+		self.batchSize = 32
+		self.nbEpoch = 8
+
+def try_LSTM():
+	cfg = LSTMConfig()
+	train.train_and_test(load_existing_dataset=False, load_existing_model=False, 
+		modelType=LSTMModel, dataProviderType=RawEEGDataProvider, labelProviderType=SimpleDNNLabelProvider, config=cfg)
+
+try_LSTM()
