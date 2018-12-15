@@ -31,17 +31,17 @@ def try_CNN():
 class SimpleDNNConfig(config.GenericConfig):
 	def __init__(self):
 		super().__init__()
-		self.nbPerClass = 1000
-		self.batchSize = 128
+		self.nbPerClass = 1024
+		self.batchSize = 32
 		self.nbEpoch = 16
 		self.sample_rate = 256
 		self.fft_window = 90
-		self.nFeatures = 45*4
+		self.nFeatures = 6*4
 		self.nbClasses = 3
 
 def try_MLP():
 	cfg = SimpleDNNConfig()
-	train.train_and_test(load_existing_dataset=False, load_existing_model=False, 
+	train.train_and_test(load_existing_dataset=False, load_existing_model=True, 
 		modelType=SimpleDNNModel, dataProviderType=FFTDataProvider, labelProviderType=SimpleDNNLabelProvider, config=cfg)
 
 class SimpleSVMConfig(config.GenericConfig):
@@ -58,3 +58,5 @@ def try_SVM():
 	train.train_and_test(load_existing_dataset=False, load_existing_model=False, 
 		modelType=SimpleSVMModel, dataProviderType=FFTDataProvider, labelProviderType=SimpleSVMLabelProvider, config=cfg
 	)
+
+try_MLP()

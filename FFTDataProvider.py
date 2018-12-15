@@ -5,6 +5,9 @@ class FFTDataProvider(WindowBasedDataProvider):
 	def __init__(self, config, labelProvider):
 		super().__init__(config, labelProvider)
 
+	def X_shape(self):
+		return [-1, self.config.nFeatures]
+
 	def getFeaturesFromWindow(self):
 		features = []
 		for channel_idx in range(4):

@@ -16,7 +16,3 @@ class BaseTFLearnModel(Model):
 
 	def saveModel(self):
 		self.model.save('eegDNN.tflearn')
-
-	def testAccuracy(self):
-		res = self.model.evaluate(self.test_X, self.test_y)
-		return res[0]

@@ -28,7 +28,7 @@ def fft(sig, norm=None):
 
 def fft_elements(sig):
     f = fft(sig)
-    #f = np.log(f)
+    f = np.log(f)
     elements = []
     elements.append(sum(f[:5]))     #delta
     elements.append(sum(f[4:9]))    #theta
