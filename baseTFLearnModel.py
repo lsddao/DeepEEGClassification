@@ -16,3 +16,9 @@ class BaseTFLearnModel(Model):
 
 	def saveModel(self):
 		self.model.save('eegDNN.tflearn')
+
+	def trainAccuracy(self):
+		return self.model.evaluate(self.train_X, self.train_y, batch_size=self.config.batchSize)[0]
+
+	def validationAccuracy(self):
+		return self.model.evaluate(self.validation_X, self.validation_y, batch_size=self.config.batchSize)[0]

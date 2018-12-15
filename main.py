@@ -31,8 +31,8 @@ def try_CNN():
 class SimpleDNNConfig(config.GenericConfig):
 	def __init__(self):
 		super().__init__()
-		self.nbPerClass = 1024
-		self.batchSize = 32
+		self.nbPerClass = 30000
+		self.batchSize = 30000
 		self.nbEpoch = 16
 		self.sample_rate = 256
 		self.fft_window = 90
@@ -41,7 +41,7 @@ class SimpleDNNConfig(config.GenericConfig):
 
 def try_MLP():
 	cfg = SimpleDNNConfig()
-	train.train_and_test(load_existing_dataset=False, load_existing_model=True, 
+	train.train_and_test(load_existing_dataset=False, load_existing_model=False, 
 		modelType=SimpleDNNModel, dataProviderType=FFTDataProvider, labelProviderType=SimpleDNNLabelProvider, config=cfg)
 
 class SimpleSVMConfig(config.GenericConfig):
