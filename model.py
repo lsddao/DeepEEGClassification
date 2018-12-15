@@ -54,9 +54,7 @@ class Model:
 		raise NotImplementedError
 
 	def createDataset(self):
-		print("Creating dataset...")
-		validationRatio = self.config.validationRatio
-	
+		print("Creating dataset...")	
 		data = self.dataProvider.getData()
 
 		#Shuffle data
@@ -66,7 +64,7 @@ class Model:
 		X,y = zip(*data)
 
 		#Split data
-		validationNb = int(len(X)*validationRatio)
+		validationNb = int(len(X)*self.config.validationRatio)
 		trainNb = len(X)-validationNb
 		
 		#Prepare test arrays
