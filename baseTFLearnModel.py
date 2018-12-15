@@ -12,7 +12,7 @@ class BaseTFLearnModel(Model):
 	def trainModel(self):
 		run_id = 'EEG_{}'.format(dt.datetime.now().strftime("%Y%m%d%H%M%S"))
 		self.model.fit(self.train_X, self.train_y, n_epoch=self.config.nbEpoch, batch_size=self.config.batchSize, 
-			shuffle=True, validation_set=(self.validation_X, self.validation_y), snapshot_step=100, show_metric=True, run_id=run_id)
+			shuffle=True, validation_set=(self.validation_X, self.validation_y), snapshot_step=None, show_metric=True, run_id=run_id)
 
 	def saveModel(self):
 		self.model.save('eegDNN.tflearn')

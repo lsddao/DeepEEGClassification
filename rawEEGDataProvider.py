@@ -9,4 +9,10 @@ class RawEEGDataProvider(WindowBasedDataProvider):
 		return [-1, self.config.sequenceLength, self.config.nChannels]
 
 	def getFeaturesFromWindow(self):
-		return np.array(self.samples)
+		timesteps = []
+		for i in range(self.config.sequenceLength):
+			channel_data = []
+			for ch in range(self.config.nChannels):
+				channel_data.append(self.samples[ch][i])
+			timesteps.append(channel_data)
+		return np.array(timesteps)
