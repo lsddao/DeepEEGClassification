@@ -8,15 +8,12 @@ class NotEnoughData(BaseException):
 	def __str__(self):
 		return repr(self.value)
 
-class Base1DDataProvider(BaseDataProvider):
+class SequentialDataProvider(BaseDataProvider):
 	def __init__(self, config, labelProvider):
 		super().__init__(config, labelProvider)
 		self.dataPerClass = dict()
 		for key in self.labelProvider.getClasses():
 			self.dataPerClass[key] = 0
-
-	def X_shape(self):
-		return [-1, self.config.nFeatures]
 
 	def getLabel(self):
 		return self.labelProvider.getLabel(self.enjoy)

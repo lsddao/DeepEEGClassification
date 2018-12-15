@@ -58,5 +58,3 @@ def try_SVM():
 	train.train_and_test(load_existing_dataset=False, load_existing_model=False, 
 		modelType=SimpleSVMModel, dataProviderType=FFTDataProvider, labelProviderType=SimpleSVMLabelProvider, config=cfg
 	)
-
-try_SVM()

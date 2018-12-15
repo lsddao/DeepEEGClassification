@@ -19,9 +19,6 @@ class SimpleSVMModel(Model):
 	def trainAccuracy(self):
 		return self.dataSetAccuracy(self.train_X, self.train_y)
 
-	def testAccuracy(self):
-		return self.dataSetAccuracy(self.test_X, self.test_y)
-
 	def validationAccuracy(self):
 		return self.dataSetAccuracy(self.validation_X, self.validation_y)
 

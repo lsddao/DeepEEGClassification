@@ -25,8 +25,6 @@ class Model:
 		self.train_y = pickle.load(open("{}train_y_{}.p".format(datasetPath,datasetName), "rb" ))
 		self.validation_X = pickle.load(open("{}validation_X_{}.p".format(datasetPath,datasetName), "rb" ))
 		self.validation_y = pickle.load(open("{}validation_y_{}.p".format(datasetPath,datasetName), "rb" ))
-		self.test_X = pickle.load(open("{}test_X_{}.p".format(datasetPath,datasetName), "rb" ))
-		self.test_y = pickle.load(open("{}test_y_{}.p".format(datasetPath,datasetName), "rb" ))
 		print("Datasets loaded!")
 
 	def saveDataset(self):
@@ -37,8 +35,6 @@ class Model:
 		pickle.dump(self.train_y, open("{}train_y_{}.p".format(datasetPath,datasetName), "wb" ))
 		pickle.dump(self.validation_X, open("{}validation_X_{}.p".format(datasetPath,datasetName), "wb" ))
 		pickle.dump(self.validation_y, open("{}validation_y_{}.p".format(datasetPath,datasetName), "wb" ))
-		pickle.dump(self.test_X, open("{}test_X_{}.p".format(datasetPath,datasetName), "wb" ))
-		pickle.dump(self.test_y, open("{}test_y_{}.p".format(datasetPath,datasetName), "wb" ))
 		print("Dataset saved!")
 
 	def trainModel(self):
@@ -50,17 +46,16 @@ class Model:
 	def correctedAcc(self, acc):
 		rnd_acc = 1.0/self.config.nbClasses
 		return (acc - rnd_acc) / (1.0 - rnd_acc)
-
-	def testAccuracy(self):
-		raise NotImplementedError
 	
+	def trainAccuracy(self):
+		raise NotImplementedError
+
 	def validationAccuracy(self):
 		raise NotImplementedError
 
 	def createDataset(self):
 		print("Creating dataset...")
 		validationRatio = self.config.validationRatio
-		testRatio = self.config.testRatio
 	
 		data = self.dataProvider.getData()
 
@@ -72,17 +67,14 @@ class Model:
 
 		#Split data
 		validationNb = int(len(X)*validationRatio)
-		testNb = int(len(X)*testRatio)
-		trainNb = len(X)-(validationNb + testNb)
+		trainNb = len(X)-validationNb
 		
 		#Prepare test arrays
 		x_shape = self.dataProvider.X_shape()
 
 		self.train_X = np.array(X[:trainNb]).reshape(x_shape)
 		self.train_y = np.array(y[:trainNb])
-		self.validation_X = np.array(X[trainNb:trainNb+validationNb]).reshape(x_shape)
-		self.validation_y = np.array(y[trainNb:trainNb+validationNb])
-		self.test_X = np.array(X[-testNb:]).reshape(x_shape)
-		self.test_y = np.array(y[-testNb:])
+		self.validation_X = np.array(X[trainNb:]).reshape(x_shape)
+		self.validation_y = np.array(y[trainNb:])
 
 		print("Dataset created!")

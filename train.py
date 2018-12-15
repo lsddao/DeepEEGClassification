@@ -34,8 +34,4 @@ def train_and_test(load_existing_dataset, load_existing_model, modelType, dataPr
 	print("Validation accuracy: {} ".format(acc))
 	print('Corrected accuracy (100%): {}'.format(100*model.correctedAcc(acc)))
 
-	acc = model.testAccuracy()
-	print("Test accuracy: {} ".format(acc))
-	print('Corrected accuracy (100%): {}'.format(100*model.correctedAcc(acc)))
-
 	return acc
