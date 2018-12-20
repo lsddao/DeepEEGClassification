@@ -11,25 +11,20 @@ from FFT2DDataProvider import FFT2DDataProvider
 
 from eegToData import generate_slices_all
 
-imagesPath = "Data/Slices/"
-imageSize = 64
 
 class CNNConfig(config.GenericConfig):
 	def __init__(self):
 		super().__init__()
-		self.imagesPath = imagesPath
-		self.imageSize = imageSize
 		self.nbPerClass = 486
 		self.batchSize = 300
 		self.nbEpoch = 16
-		self.classes = os.listdir(self.imagesPath)
-		self.classes = [filename for filename in self.classes if os.path.isdir(self.imagesPath + filename)]
-		self.nbClasses = len(self.classes)
+		self.nbClasses = 3
+		self.fft_window = 90
 
 def try_CNN():
 	cfg = CNNConfig()
-	train.train_and_test(load_existing_dataset=False, load_existing_model=False, 
-		modelType=CNNModel, config=cfg)
+	train.train_and_test(load_existing_dataset=False, load_existing_model=False, train_model=True, modelType=CNNModel, 
+		dataProviderType=FFT2DDataProvider, labelProviderType=SimpleDNNLabelProvider, config=cfg)
 
 class SimpleDNNConfig(config.GenericConfig):
 	def __init__(self):
@@ -79,4 +74,4 @@ def try_LSTM():
 	train.train_and_test(load_existing_dataset=True, load_existing_model=True, train_model=True, 
 		modelType=LSTMModel, dataProviderType=FFT2DDataProvider, labelProviderType=SimpleDNNLabelProvider, config=cfg)
 
-try_LSTM()
+try_CNN()

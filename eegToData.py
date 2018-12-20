@@ -26,9 +26,11 @@ def fft(sig, norm=None):
     f = np.delete(f, 0)
     return f
 
+def fft_log(sig):
+    return np.log(fft(sig))
+
 def fft_elements(sig):
-    f = fft(sig)
-    f = np.log(f)
+    f = fft_log(sig)
     elements = []
     elements.append(sum(f[:5]))     #delta
     elements.append(sum(f[4:9]))    #theta
@@ -48,7 +50,6 @@ def fft_elements(sig):
     #    elements.append(freq)
     #elements = np.log(elements)
     return elements
-
 
 def dump_image_impl(imagesPath, arr, subfolder, image_name):
     png.from_array(arr, 'L', info={ "bitdepth" : 8 }).save("{}/{}/{}.png".format(imagesPath, subfolder, image_name))
