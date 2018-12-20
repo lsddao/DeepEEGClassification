@@ -11,9 +11,9 @@ from FFT2DDataProvider import FFT2DDataProvider
 class CNNConfig(config.GenericConfig):
 	def __init__(self):
 		super().__init__()
-		self.nbPerClass = 1000
+		self.nbPerClass = 37857
 		self.batchSize = 300
-		self.nbEpoch = 8
+		self.nbEpoch = 1
 		self.nbClasses = 3
 		self.sequenceLength = 64
 		self.nFeatures = 64
@@ -22,7 +22,7 @@ class CNNConfig(config.GenericConfig):
 
 def try_CNN():
 	cfg = CNNConfig()
-	train.train_and_test(load_existing_dataset=False, load_existing_model=False, train_model=True, modelType=CNNModel, 
+	train.train_and_test(load_existing_dataset=True, load_existing_model=True, train_model=True, modelType=CNNModel, 
 		dataProviderType=FFT2DDataProvider, labelProviderType=SimpleDNNLabelProvider, config=cfg)
 
 class SimpleDNNConfig(config.GenericConfig):
