@@ -1,5 +1,5 @@
 from winDataProvider import WindowBasedDataProvider
-from eegToData import fft_elements
+from eegToData import fft_elements, fft_log
 from collections import deque
 import numpy as np
 
@@ -12,7 +12,7 @@ class FFT2DDataProvider(WindowBasedDataProvider):
 		self.fft_shift = 0
 
 	def X_shape(self):
-		return [-1, self.config.sequenceLength, self.config.nFeatures]
+		return [-1, self.config.sequenceLength, self.config.nFeatures, 1]
 
 	def consumeWindow(self):
 		if len(self.timesteps) == self.timesteps.maxlen:
@@ -20,9 +20,9 @@ class FFT2DDataProvider(WindowBasedDataProvider):
 		features = []
 		f = []
 		for channel_idx in range(4):
-			f.append(np.array(fft_elements(self.samples[channel_idx])))
+			f.append( fft_log(self.samples[channel_idx])[:64] )
 		features.extend(f[0] - f[3])
-		features.extend(f[1] - f[2])
+		#features.extend(f[1] - f[2])
 		self.timesteps.append(features)
 		if self.fft_shift == self.fft_increment:
 			self.fft_shift = 0

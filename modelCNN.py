@@ -11,7 +11,7 @@ class CNNModel(BaseTFLearnModel):
 	
 	def createModel(self):
 		print("Creating model...")
-		imageSize = self.config.imageSize
+		imageSize = self.config.sequenceLength
 		nbClasses = self.config.nbClasses
 
 		net = input_data(shape=[None, imageSize, imageSize, 1], name='input')

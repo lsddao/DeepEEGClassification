@@ -27,7 +27,7 @@ def fft(sig, norm=None):
     return f
 
 def fft_log(sig):
-    return np.log(fft(sig))
+    return np.array(np.log(fft(sig)))
 
 def fft_elements(sig):
     f = fft_log(sig)

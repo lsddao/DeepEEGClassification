@@ -11,11 +11,14 @@ from FFT2DDataProvider import FFT2DDataProvider
 class CNNConfig(config.GenericConfig):
 	def __init__(self):
 		super().__init__()
-		self.nbPerClass = 486
+		self.nbPerClass = 1000
 		self.batchSize = 300
-		self.nbEpoch = 16
+		self.nbEpoch = 8
 		self.nbClasses = 3
-		self.fft_window = 90
+		self.sequenceLength = 64
+		self.nFeatures = 64
+		self.sample_rate = 256
+		self.window_step = 32
 
 def try_CNN():
 	cfg = CNNConfig()
