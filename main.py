@@ -1,5 +1,4 @@
 import train
-import os
 import config
 from modelCNN import CNNModel
 from modelSimpleDNN import SimpleDNNModel, SimpleDNNLabelProvider
@@ -8,9 +7,6 @@ from FFTDataProvider import FFTDataProvider
 from modelLSTM import LSTMModel
 from rawEEGDataProvider import RawEEGDataProvider
 from FFT2DDataProvider import FFT2DDataProvider
-
-from eegToData import generate_slices_all
-
 
 class CNNConfig(config.GenericConfig):
 	def __init__(self):
