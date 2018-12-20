@@ -46,6 +46,7 @@ def fft_elements(sig):
     #    freq = max(freq, 0.0)
     #    freq = min(freq, 1.0)
     #    elements.append(freq)
+    #elements = np.log(elements)
     return elements
 
 

@@ -7,6 +7,7 @@ from simpleSVMmodel import SimpleSVMModel, SimpleSVMLabelProvider
 from FFTDataProvider import FFTDataProvider
 from modelLSTM import LSTMModel
 from rawEEGDataProvider import RawEEGDataProvider
+from FFT2DDataProvider import FFT2DDataProvider
 
 from eegToData import generate_slices_all
 
@@ -63,18 +64,19 @@ def try_SVM():
 class LSTMConfig(config.GenericConfig):
 	def __init__(self):
 		super().__init__()
-		self.nbPerClass = 1024
+		self.nbPerClass = 37902
 		self.sample_rate = 256
 		self.window_step = 32
 		self.nChannels = 4
 		self.nbClasses = 3
-		self.sequenceLength = self.sample_rate
-		self.batchSize = 32
-		self.nbEpoch = 16
+		self.sequenceLength = 8*2
+		self.batchSize = 4*8192
+		self.nbEpoch = 1024
+		self.nFeatures = self.nChannels*3
 
 def try_LSTM():
 	cfg = LSTMConfig()
-	train.train_and_test(load_existing_dataset=True, load_existing_model=False, 
-		modelType=LSTMModel, dataProviderType=RawEEGDataProvider, labelProviderType=SimpleDNNLabelProvider, config=cfg)
+	train.train_and_test(load_existing_dataset=True, load_existing_model=True, train_model=True, 
+		modelType=LSTMModel, dataProviderType=FFT2DDataProvider, labelProviderType=SimpleDNNLabelProvider, config=cfg)
 
 try_LSTM()

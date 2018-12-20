@@ -1,5 +1,5 @@
 # main training procedure
-def train_and_test(load_existing_dataset, load_existing_model, modelType, dataProviderType, labelProviderType, config):
+def train_and_test(load_existing_dataset, load_existing_model, train_model, modelType, dataProviderType, labelProviderType, config):
 	model = modelType(config)
 	labelProvider = labelProviderType()
 	model.dataProvider = dataProviderType(config, labelProvider)
@@ -16,7 +16,8 @@ def train_and_test(load_existing_dataset, load_existing_model, modelType, dataPr
 		print("Loading model...")
 		model.loadModel()
 		print("Model loaded!")
-	else:
+	
+	if train_model:
 		#Train the model
 		print("Training the model...")
 		model.trainModel()

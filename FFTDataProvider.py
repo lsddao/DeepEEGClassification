@@ -1,7 +1,7 @@
-from winDataProvider import WindowBasedDataProvider
+from simpleWinEEGDataProvider import SimpleWindowBasedDataProvider
 from eegToData import fft_elements
 
-class FFTDataProvider(WindowBasedDataProvider):
+class FFTDataProvider(SimpleWindowBasedDataProvider):
 	def __init__(self, config, labelProvider):
 		super().__init__(config, labelProvider)
 

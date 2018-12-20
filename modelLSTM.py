@@ -5,19 +5,21 @@ from labelProvider import BaseLabelProvider
 class LSTMModel(BaseTFLearnModel):
 	def __init__(self, config):
 		super().__init__(config)
+
+	def trainModel(self):
+		self.model.fit(self.train_X, self.train_y, n_epoch=self.config.nbEpoch, batch_size=self.config.batchSize, 
+			shuffle=False, validation_set=(self.validation_X, self.validation_y), show_metric=True, run_id=self.getRunID())
 	
 	def createModel(self):
 		print("Creating model...")
 		sequenceLength = self.config.sequenceLength
 		nbClasses = self.config.nbClasses
-		nChannels = self.config.nChannels
+		nFeatures = self.config.nFeatures
 
-		net = input_data(shape=[None, sequenceLength, nChannels])
-		net = lstm(net, n_units=nChannels*2, activation='relu', return_seq=True)
-		net = dropout(net, 0.2)
-		net = lstm(net, n_units=nChannels, activation='sigmoid')
-		net = fully_connected(net, nbClasses, activation='sigmoid')
-		net = regression(net, optimizer='rmsprop')
+		net = input_data(shape=[None, sequenceLength, nFeatures])
+		net = lstm(net, n_units=nFeatures, dropout=0.8)
+		net = fully_connected(net, nbClasses, activation='softmax')
+		net = regression(net)
 
 		self.model = DNN(net)
 

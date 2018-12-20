@@ -1,7 +1,7 @@
-from winDataProvider import WindowBasedDataProvider
+from simpleWinEEGDataProvider import SimpleWindowBasedDataProvider
 import numpy as np
 
-class RawEEGDataProvider(WindowBasedDataProvider):
+class RawEEGDataProvider(SimpleWindowBasedDataProvider):
 	def __init__(self, config, labelProvider):
 		super().__init__(config, labelProvider)
 

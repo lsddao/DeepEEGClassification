@@ -10,7 +10,7 @@ class WindowBasedDataProvider(SequentialDataProvider):
 		self.increment = self.config.window_step
 		self.shift = 0
 
-	def getFeaturesFromWindow(self):
+	def consumeWindow(self):
 		raise NotImplementedError
 
 	def consumeEEG(self, channel_data):
@@ -20,6 +20,4 @@ class WindowBasedDataProvider(SequentialDataProvider):
 			self.samples[channel_idx].append(channel_data[channel_idx])
 		if self.shift == self.increment:
 			self.shift = 0
-			if not self.isCurrentClassFull():
-				features = self.getFeaturesFromWindow()
-				self.appendData(features)
+			self.consumeWindow()
