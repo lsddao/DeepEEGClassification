@@ -16,16 +16,16 @@ class CNNModel(BaseTFLearnModel):
 
 		net = input_data(shape=[None, imageSize, imageSize, 1], name='input')
 
-		net = conv_2d(net, imageSize/2, 2, activation='elu', weights_init="Xavier")
+		net = conv_2d(net, imageSize/2, 2, activation='elu', weights_init="Xavier", name='conv1')
 		net = max_pool_2d(net, 2)
 
-		net = conv_2d(net, imageSize, 2, activation='elu', weights_init="Xavier")
+		net = conv_2d(net, imageSize, 2, activation='elu', weights_init="Xavier", name='conv2')
 		net = max_pool_2d(net, 2)
 
-		net = conv_2d(net, imageSize*2, 2, activation='elu', weights_init="Xavier")
+		net = conv_2d(net, imageSize*2, 2, activation='elu', weights_init="Xavier", name='conv3')
 		net = max_pool_2d(net, 2)
 
-		net = conv_2d(net, imageSize*4, 2, activation='elu', weights_init="Xavier")
+		net = conv_2d(net, imageSize*4, 2, activation='elu', weights_init="Xavier", name='conv4')
 		net = max_pool_2d(net, 2)
 
 		net = fully_connected(net, imageSize*8, activation='elu')

@@ -51,8 +51,11 @@ def fft_elements(sig):
     #elements = np.log(elements)
     return elements
 
+def dump_png(arr, image_name):
+    png.from_array(arr, 'L', info={ "bitdepth" : 8 }).save(image_name)
+
 def dump_image_impl(imagesPath, arr, subfolder, image_name):
-    png.from_array(arr, 'L', info={ "bitdepth" : 8 }).save("{}/{}/{}.png".format(imagesPath, subfolder, image_name))
+    dump_png(arr, "{}/{}/{}.png".format(imagesPath, subfolder, image_name))
 
 def dump_image(imagesPath, arr, subfolder, image_name):
     size = int(arr.shape[0]/2)

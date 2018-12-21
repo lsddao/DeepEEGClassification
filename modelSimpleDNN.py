@@ -11,12 +11,14 @@ class SimpleDNNModel(BaseTFLearnModel):
 		nFeatures = self.config.nFeatures
 		nbClasses = self.config.nbClasses
 
-		preprocess = DataPreprocessing()
-		preprocess.add_featurewise_zero_center()
-		preprocess.add_featurewise_stdnorm()
+		#preprocess = DataPreprocessing()
+		#preprocess.add_featurewise_zero_center()
+		#preprocess.add_featurewise_stdnorm()
 
-		net = input_data(shape=[None, nFeatures], data_preprocessing=preprocess)
+		net = input_data(shape=[None, nFeatures])
 		net = fully_connected(net, 32, activation='elu', weights_init="Xavier")
+		net = fully_connected(net, 64, activation='elu', weights_init="Xavier")
+		net = fully_connected(net, 128, activation='elu', weights_init="Xavier")
 		net = fully_connected(net, nbClasses, activation='softmax')
 		net = regression(net)
 
@@ -27,25 +29,37 @@ class SimpleDNNModel(BaseTFLearnModel):
 		return 'simpleDNNModel'
 
 class SimpleDNNLabelProvider(BaseLabelProvider):
-	def getLabel(self, value):
-		to_label = {
+	to_label = {
 			-2 : [1., 0., 0.],
 			-1 : [1., 0., 0.],
 			0 : [0., 1., 0.],
 			1 : [0., 0., 1.],
 			2 : [0., 0., 1.]
 		}
-		return to_label[value]
-        
-	def getClassName(self, value):
-		to_class = {
+
+	to_class = {
  		   -2 : "bad",
 			-1 : "bad",
 			0 : "ok",
 			1 : "good",
 			2 : "good"
 		}
-		return to_class[value]
+
+	def getLabel(self, value):
+		return self.to_label[value]
+        
+	def getClassName(self, value):
+		return self.to_class[value]
 
 	def getClasses(self):
-		return ['bad', 'ok', 'good']
+		return set(self.to_class.values())
+	
+	def classFromLabel(self, label):
+		if label[0] == 1.:
+			return 'bad'
+		elif label[1] == 1.:
+			return 'ok'
+		elif label[2] == 1.:
+			return 'good'
+		else:
+			raise Exception
