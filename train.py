@@ -1,5 +1,5 @@
 # main training procedure
-def train_and_test(load_existing_dataset, load_existing_model, train_model, modelType, dataProviderType, labelProviderType, config):
+def train_and_test(load_existing_dataset, load_existing_model, train_model, check_accuracy, modelType, dataProviderType, labelProviderType, config):
 	model = modelType(config)
 	labelProvider = labelProviderType()
 	model.dataProvider = dataProviderType(config, labelProvider)
@@ -10,7 +10,8 @@ def train_and_test(load_existing_dataset, load_existing_model, train_model, mode
 		model.createDataset()
 		model.saveDataset()
 
-	model.createModel()
+	if load_existing_model or train_model or check_accuracy:
+		model.createModel()
 
 	if load_existing_model:
 		print("Loading model...")
@@ -27,16 +28,17 @@ def train_and_test(load_existing_dataset, load_existing_model, train_model, mode
 		model.saveModel()
 		print("Model saved!")
 
-	try:
-		acc = model.trainAccuracy()
-		print("Train accuracy: {} ".format(acc))
-		print('Corrected accuracy (100%): {}'.format(100*model.correctedAcc(acc)))
-	except NotImplementedError:
-		print('Model does not implement trainAccuracy()')
+	if check_accuracy:
+		try:
+			acc = model.trainAccuracy()
+			print("Train accuracy: {} ".format(acc))
+			print('Corrected accuracy (100%): {}'.format(100*model.correctedAcc(acc)))
+		except NotImplementedError:
+			print('Model does not implement trainAccuracy()')
 
-	try:
-		acc = model.validationAccuracy()
-		print("Validation accuracy: {} ".format(acc))
-		print('Corrected accuracy (100%): {}'.format(100*model.correctedAcc(acc)))
-	except NotImplementedError:
-		print('Model does not implement validationAccuracy()')
+		try:
+			acc = model.validationAccuracy()
+			print("Validation accuracy: {} ".format(acc))
+			print('Corrected accuracy (100%): {}'.format(100*model.correctedAcc(acc)))
+		except NotImplementedError:
+			print('Model does not implement validationAccuracy()')
