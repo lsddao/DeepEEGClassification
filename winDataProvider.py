@@ -9,15 +9,20 @@ class WindowBasedDataProvider(SequentialDataProvider):
 		self.samples = [deque(maxlen=sample_rate) for channel in range(4)]
 		self.increment = self.config.window_step
 		self.shift = 0
+		self.y_samples = deque(maxlen=sample_rate)
 
 	def consumeWindow(self):
 		raise NotImplementedError
+
+	def getEnjoy(self):
+		return max(set(self.y_samples), key = self.y_samples.count)
 
 	def consumeEEG(self, channel_data):
 		if len(self.samples[0]) == self.samples[0].maxlen:
 			self.shift += 1
 		for channel_idx in range(4):
 			self.samples[channel_idx].append(channel_data[channel_idx])
+		self.y_samples.append(self.enjoy)
 		if self.shift == self.increment:
 			self.shift = 0
 			self.consumeWindow()

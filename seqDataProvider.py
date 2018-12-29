@@ -1,13 +1,6 @@
 from baseDataProvider import BaseDataProvider
 import trackdata
 
-class NotEnoughData(BaseException):
-	def __init__(self, value):
-		self.value = value
-
-	def __str__(self):
-		return repr(self.value)
-
 class SequentialDataProvider(BaseDataProvider):
 	def __init__(self, config, labelProvider):
 		super().__init__(config, labelProvider)
@@ -16,10 +9,13 @@ class SequentialDataProvider(BaseDataProvider):
 			self.dataPerClass[key] = 0
 
 	def getLabel(self):
-		return self.labelProvider.getLabel(self.enjoy)
+		return self.labelProvider.getLabel(self.getEnjoy())
 
 	def getClassName(self):
-		return self.labelProvider.getClassName(self.enjoy)
+		return self.labelProvider.getClassName(self.getEnjoy())
+
+	def getEnjoy(self):
+		return self.enjoy
 
 	def consumeEEG(self, channel_data):
 		raise NotImplementedError
@@ -60,7 +56,7 @@ class SequentialDataProvider(BaseDataProvider):
 						self.enjoy = x["value"]
 		
 		if not self.isFull():
+			print('Warning: not enough data per class')
 			print(self.dataPerClass)
-			raise NotEnoughData("Not enough data per class")
 
 		return self.data
