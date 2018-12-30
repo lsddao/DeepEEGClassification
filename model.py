@@ -57,8 +57,8 @@ class Model:
 		print("Creating dataset...")	
 		data = self.dataProvider.getData()
 
-		#Shuffle data
-		shuffle(data)
+		if self.dataProvider.shuffleAllowed():
+			shuffle(data)
 
 		#Extract X and y
 		X,y = zip(*data)

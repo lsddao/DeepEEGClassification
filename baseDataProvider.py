@@ -8,3 +8,6 @@ class BaseDataProvider():
 		
 	def getData(self):
 		raise NotImplementedError
+
+	def shuffleAllowed(self):
+		return True

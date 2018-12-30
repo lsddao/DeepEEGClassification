@@ -11,6 +11,12 @@ class WindowBasedDataProvider(SequentialDataProvider):
 		self.shift = 0
 		self.y_samples = deque(maxlen=sample_rate)
 
+	def shuffleAllowed(self):
+		# Because of data augmentation through sliding window, 
+		# portions of training data may leak into the validation set.
+		# This is why shuffle is restricted for all window-based data providers.
+		return False
+
 	def consumeWindow(self):
 		raise NotImplementedError
 
