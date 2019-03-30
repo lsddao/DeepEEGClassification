@@ -23,7 +23,7 @@ class CNNConfig(config.GenericConfig):
 def try_CNN():
 	cfg = CNNConfig()
 	train.train_and_test(load_existing_dataset=False, load_existing_model=False, train_model=True, modelType=CNNModel, 
-		dataProviderType=FFT2DDataProvider, labelProviderType=SimpleDNNLabelProvider, config=cfg)
+		dataProviderType=FFT2DDataProvider, labelProviderType=SimpleDNNLabelProvider, config=cfg, check_accuracy=True)
 
 def visualize_weights(layer):
 	cfg = CNNConfig()
