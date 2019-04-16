@@ -1,5 +1,6 @@
 from simpleWinEEGDataProvider import SimpleWindowBasedDataProvider
 from eegToData import fft_elements, fft_log
+import numpy as np
 
 class FFTDataProvider(SimpleWindowBasedDataProvider):
 	def __init__(self, config, labelProvider):
@@ -9,9 +10,5 @@ class FFTDataProvider(SimpleWindowBasedDataProvider):
 		return [-1, self.config.nFeatures]
 
 	def getFeaturesFromWindow(self):
-		features = []
-		f = []
-		for channel_idx in range(4):
-			f.append( fft_log(self.samples[channel_idx])[:64] )
-		features.extend(f[0] - f[3])
+		features = fft_elements(self.samples[0]) - fft_elements(self.samples[3])
 		return features

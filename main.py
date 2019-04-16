@@ -4,6 +4,7 @@ from modelSimpleDNN import SimpleDNNModel, SimpleDNNLabelProvider
 from simpleSVMmodel import SimpleSVMModel, SimpleSVMLabelProvider
 from FFTDataProvider import FFTDataProvider
 from modelLSTM import LSTMModel
+from SRF import SimpleRFModel, SRFLabelProvider
 from rawEEGDataProvider import RawEEGDataProvider
 from FFT2DDataProvider import FFT2DDataProvider
 
@@ -20,7 +21,7 @@ class SimpleDNNConfig(config.GenericConfig):
 
 def try_MLP():
 	cfg = SimpleDNNConfig()
-	train.train_and_test(load_existing_dataset=True, load_existing_model=False, train_model=True, 
+	train.train_and_test(load_existing_dataset=True, load_existing_model=False, train_model=True, check_accuracy=False, 
 		modelType=SimpleDNNModel, dataProviderType=FFTDataProvider, labelProviderType=SimpleDNNLabelProvider, config=cfg)
 
 class SimpleSVMConfig(config.GenericConfig):
@@ -34,7 +35,7 @@ class SimpleSVMConfig(config.GenericConfig):
 
 def try_SVM():
 	cfg = SimpleSVMConfig()
-	train.train_and_test(load_existing_dataset=False, load_existing_model=False, train_model=True, 
+	train.train_and_test(load_existing_dataset=False, load_existing_model=False, train_model=True, check_accuracy=False, 
 		modelType=SimpleSVMModel, dataProviderType=FFTDataProvider, labelProviderType=SimpleSVMLabelProvider, config=cfg)
 
 class LSTMConfig(config.GenericConfig):
@@ -52,5 +53,22 @@ class LSTMConfig(config.GenericConfig):
 
 def try_LSTM():
 	cfg = LSTMConfig()
-	train.train_and_test(load_existing_dataset=True, load_existing_model=True, train_model=True, 
+	train.train_and_test(load_existing_dataset=True, load_existing_model=True, train_model=True,  check_accuracy=False, 
 		modelType=LSTMModel, dataProviderType=FFT2DDataProvider, labelProviderType=SimpleDNNLabelProvider, config=cfg)
+
+class SimpleRandomForest(config.GenericConfig):
+	def __init__(self):
+		super().__init__()
+		self.nbPerClass = 10000
+		self.sample_rate = 256
+		self.fft_window = 90
+		self.window_step = 32
+		self.nFeatures = 5
+		self.nbClasses = 3
+
+def try_SRF():
+	cfg = SimpleRandomForest()
+	train.train_and_test(load_existing_dataset=False, load_existing_model=False, train_model=True, check_accuracy=True, 
+		modelType=SimpleRFModel, dataProviderType=FFTDataProvider, labelProviderType=SRFLabelProvider, config=cfg)
+
+try_SRF()
