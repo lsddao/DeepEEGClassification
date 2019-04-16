@@ -59,11 +59,11 @@ def try_LSTM():
 class SimpleRandomForest(config.GenericConfig):
 	def __init__(self):
 		super().__init__()
-		self.nbPerClass = 10000
+		self.nbPerClass = 48000
 		self.sample_rate = 256
 		self.fft_window = 90
 		self.window_step = 32
-		self.nFeatures = 5
+		self.nFeatures = 45
 		self.nbClasses = 3
 
 def try_SRF():

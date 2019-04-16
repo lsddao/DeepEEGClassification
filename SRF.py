@@ -31,11 +31,12 @@ class SimpleRFModel(Model):
 			actual_label = vector_y[idx]
 			if predicted_label == actual_label:
 				accurate += 1
+			#print("Current accuracy: {}".format(accurate / (idx+1)))
 		return accurate / size
 
 	def createModel(self):
 		print("Creating model...")
-		self.model = RandomForestClassifier(n_estimators=100)
+		self.model = RandomForestClassifier(n_estimators=100, max_depth=10)
 		print("Model created!")
 
 	def datasetName(self):

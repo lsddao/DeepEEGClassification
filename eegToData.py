@@ -37,7 +37,7 @@ def fft_elements(sig):
     elements.append(sum(f[8:14]))   #alpha
     elements.append(sum(f[13:31]))  #beta
     elements.append(sum(f[30:45]))  #gamma
-    #elements.append(sum(f[65:]))     #other
+    #elements.append(sum(f[44:65]))     #other
     # scaling to 0..1
     #for freq_bin in range(45):
     #    freq = f[freq_bin]
@@ -48,7 +48,8 @@ def fft_elements(sig):
     #    freq = max(freq, 0.0)
     #    freq = min(freq, 1.0)
     #    elements.append(freq)
-    elements = np.log(elements)
+    #elements = np.log(elements)
+    elements = np.array(elements)
     return elements
 
 def dump_png(arr, image_name):

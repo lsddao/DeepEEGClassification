@@ -10,5 +10,7 @@ class FFTDataProvider(SimpleWindowBasedDataProvider):
 		return [-1, self.config.nFeatures]
 
 	def getFeaturesFromWindow(self):
-		features = fft_elements(self.samples[0]) - fft_elements(self.samples[3])
+		#features = fft_elements(self.samples[0]) - fft_elements(self.samples[3])
+		features = fft_log(self.samples[0]) - fft_log(self.samples[3])
+		features = features[:self.config.nFeatures]
 		return features
